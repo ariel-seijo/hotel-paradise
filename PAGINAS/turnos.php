@@ -29,28 +29,54 @@ if (isset($_GET['id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TURNOS - Hotel Paradise</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="../ESTILOS/turnos-estilo.css">
+    <style>
+        /* Colores pastel */
+        .bg-disponible {
+            background-color: greenyellow;
+            /* Verde pastel */
+        }
+
+        .bg-ocupado {
+            background-color: pink;
+            /* Rojo pastel */
+        }
+
+        /* Altura personalizada para las filas de cupos */
+        .row {
+            min-height: 30px;
+            /* Altura mínima */
+        }
+
+        /* Margen entre filas */
+        .border-bottom {
+            border-bottom: 1px solid black;
+        }
+    </style>
 </head>
+
 <body>
     <?php include 'navbar.php'; ?>
 
     <div class="container contenedor-principal">
         <div class="row">
             <div class="col-3 seccion-info">
-                <img src="../IMAGENES/actividad-gimnasio.jpg" class="imagen-actividad">
+                <img src="../IMAGENES/actividad-gimnasio.jpg" class="imagen-actividad" alt="Imagen de la actividad">
                 <p class="h3 text-center"><?php echo htmlspecialchars($actividad['nombre']); ?></p>
                 <p class="h6 text-center"><?php echo htmlspecialchars($actividad['descripcion']); ?></p>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Días: <?php echo htmlspecialchars($actividad['dias']); ?></li>
-                    <li class="list-group-item">Horario: <?php echo htmlspecialchars($actividad['horarios']); ?></li>
-                    <li class="list-group-item">Formato: <?php echo $actividad['individual'] ? 'Individual' : 'Grupal'; ?></li>
-                    <li class="list-group-item">Capacidad del turno: <?php echo htmlspecialchars($actividad['capacidad']); ?> personas</li>
-                    <li class="list-group-item">Cantidad: <?php echo htmlspecialchars($actividad['cantidad']); ?></li>
+                    <li class="list-group-item">Horario de Inicio: <?php echo htmlspecialchars($actividad['horario_inicio']); ?></li>
+                    <li class="list-group-item">Horario de Cierre: <?php echo htmlspecialchars($actividad['horario_cierre']); ?></li>
+                    <li class="list-group-item">Formato: <?php echo htmlspecialchars($actividad['formato']); ?></li>
+                    <li class="list-group-item">Capacidad del turno: <?php echo htmlspecialchars($actividad['capacidad_turno']); ?> personas</li>
+                    <li class="list-group-item">Cantidad de turnos: <?php echo htmlspecialchars($actividad['cantidad_turnos']); ?></li>
                     <li class="list-group-item">Duración de turno: <?php echo htmlspecialchars($actividad['duracion']); ?> minutos</li>
                 </ul>
             </div>
@@ -65,7 +91,10 @@ if (isset($_GET['id'])) {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+
 </html>
+
+
 
 
 
@@ -113,12 +142,12 @@ if (isset($_GET['id'])) {
             </div> -->
 <!-- </div>
 </div> -->
-
+<!-- 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
-</html>
+</html> -->
 
 
 <!-- <div class="accordion-item">

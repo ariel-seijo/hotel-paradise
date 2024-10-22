@@ -13,7 +13,7 @@
     <div class="container contenedor-principal">
         <h1 class="display-1 text-center">PANEL DE ACTIVIDADES</h1>
         <div class="contenedor-actividades d-flex flex-wrap">
-        <?php include '../SCRIPT/generar-actividad.php'; ?>
+            <?php include '../SCRIPT/generar-actividad.php'; ?>
         </div>
     </div>
 

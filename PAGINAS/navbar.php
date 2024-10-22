@@ -23,7 +23,7 @@
 <style>
 
 .nav-item {
-    margin-left: 10px;
+    padding-left: 10px;
 }
 
 </style>
