@@ -13,32 +13,8 @@
     <div class="container contenedor-principal">
         <h1 class="display-1 text-center">PANEL DE ACTIVIDADES</h1>
         <div class="contenedor-actividades d-flex flex-wrap">
-            <div class="card m-4" style="width: 18rem;">
-                <img src="../IMAGENES/actividad-gimnasio.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text">Nombre de actividad</p>
-                </div>
-            </div>
-            <div class="card m-4" style="width: 18rem;">
-                <img src="../IMAGENES/actividad-gimnasio.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text">Nombre de actividad</p>
-                </div>
-            </div>
-            <div class="card m-4" style="width: 18rem;">
-                <img src="../IMAGENES/actividad-gimnasio.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text">Nombre de actividad</p>
-                </div>
-            </div>
-            <div class="card m-4" style="width: 18rem;">
-                <img src="../IMAGENES/actividad-gimnasio.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text">Nombre de actividad</p>
-                </div>
-            </div>
+        <?php include '../SCRIPT/generar-actividad.php'; ?>
         </div>
-
     </div>
 
 
