@@ -34,6 +34,7 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TURNOS - Hotel Paradise</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="../ESTILOS/turnos-estilo.css">
     <style>
@@ -64,6 +65,85 @@ if (isset($_GET['id'])) {
 <body>
     <?php include 'navbar.php'; ?>
 
+    <!-- Button trigger modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Realizar Reserva</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reservaForm">
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="dni" required>
+                            <button type="button" class="btn btn-secondary mt-2" id="btnVerificar">Verificar</button>
+                            <div class="text-danger mt-2" id="mensajeError" style="display: none;">NO SE HA ENCONTRADO EL DNI</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo" readonly>
+                        </div>
+                        <hr>
+                        <h5>DATOS DE LA RESERVA</h5>
+                        <div class="mb-3">
+                            <label for="actividad" class="form-label">Nombre de la Actividad</label>
+                            <input type="text" class="form-control" id="actividad" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="horario" class="form-label">Horario del Turno</label>
+                            <input type="text" class="form-control" id="horario" readonly>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Reserva</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Al presionar el botón de verificar
+        document.getElementById('btnVerificar').addEventListener('click', function() {
+            var dni = document.getElementById('dni').value;
+            var mensajeError = document.getElementById('mensajeError');
+
+            // Limpia el mensaje de error
+            mensajeError.style.display = 'none';
+
+            // Verifica el DNI en la base de datos
+            fetch('../SCRIPT/verificar-dni.php?dni=' + dni)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.encontrado) {
+                        // Autocompletar campos
+                        document.getElementById('nombre').value = data.nombre;
+                        document.getElementById('correo').value = data.correo;
+                    } else {
+                        mensajeError.style.display = 'block';
+                    }
+                });
+        });
+        // Al abrir el modal, autocompletar los campos de actividad y horario
+        $('#exampleModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Botón que abrió el modal
+            var actividad = button.data('actividad'); // Obtener el nombre de la actividad
+            var horario = button.data('horario'); // Obtener el horario del turno
+
+            // Asignar los valores a los campos correspondientes
+            document.getElementById('actividad').value = actividad;
+            document.getElementById('horario').value = horario;
+        });
+    </script>
+
     <div class="container contenedor-principal">
         <div class="row">
             <div class="col-3 seccion-info">
@@ -88,7 +168,6 @@ if (isset($_GET['id'])) {
             </div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

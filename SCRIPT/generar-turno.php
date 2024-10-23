@@ -1,13 +1,14 @@
 <?php
 // Incluir la conexión a la base de datos
+// Incluir la conexión a la base de datos
 include 'conexion.php';
 
 // Verificar si se ha enviado un ID de actividad
 if (isset($_GET['id'])) {
     $actividadId = intval($_GET['id']); // Asegurarse de que el ID es un número entero
 
-    // Consulta para obtener la actividad y su capacidad de turno
-    $stmt = $conn->prepare("SELECT capacidad_turno FROM actividades WHERE id = ?");
+    // Consulta para obtener la actividad, incluyendo el nombre y la capacidad de turno
+    $stmt = $conn->prepare("SELECT nombre, capacidad_turno FROM actividades WHERE id = ?");
     $stmt->bind_param("i", $actividadId);
     $stmt->execute();
     $resultado = $stmt->get_result();
@@ -59,10 +60,13 @@ if (isset($_GET['id'])) {
                         $estadoCupo = "Ocupado";
                         $nombreHuesped = "Alfonso"; // Aquí puedes poner el nombre real si tienes una tabla de reservas
                         $colorClase = 'bg-ocupado'; // Rojo pastel
+                        $botonReserva = ''; // No se muestra el botón si está ocupado
                     } else {
                         $estadoCupo = "Disponible";
                         $nombreHuesped = "- - -";
                         $colorClase = 'bg-disponible'; // Verde pastel
+                        // Aquí añadimos los atributos data-actividad y data-horario al botón
+                        $botonReserva = '<button type="button" class="btn btn-primary reservar-btn" data-actividad="' . htmlspecialchars($actividad['nombre']) . '" data-horario="' . htmlspecialchars($hora) . '" data-bs-toggle="modal" data-bs-target="#exampleModal">Reservar</button>'; // Mostrar botón reservar si está disponible
                     }
 
                     // Mostrar cada cupo dentro del acordeón
@@ -73,7 +77,7 @@ if (isset($_GET['id'])) {
                                     <div class="col-2">' . $j . ' / ' . $capacidadTurno . '</div>
                                     <div class="col-3">' . $estadoCupo . '</div>
                                     <div class="col-3">' . $nombreHuesped . '</div>
-                                    <div class="col-4"></div>
+                                    <div class="col-4">' . $botonReserva . '</div>
                                 </div>
                             </div>
                         </div>';
@@ -97,9 +101,3 @@ if (isset($_GET['id'])) {
 
 // Cerrar conexión
 $conn->close();
-?>
-
-
-
-
-

@@ -18,7 +18,6 @@ if ($result->num_rows > 0) {
         <div class="card m-4" style="width: 18rem;">
             <div style="position: relative;">
                 <img src="' . $imagenActividad . '" class="card-img-top" alt="' . $nombreActividad . '" style="height: 200px; width: 100%; object-fit: cover;">
-                <div style="position: absolute; top: 0; right: 0; width: 40px; height: 40px; background-color: red;"></div>
             </div>
             <div class="card-body">
                 <a href="turnos.php?id=' . $idActividad . '" style="text-decoration: none; color: inherit;">

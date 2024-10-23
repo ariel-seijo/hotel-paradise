@@ -15,6 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $duracionTurno = intval($_POST['duracionTurno']);
     $cantidadTurnos = intval($_POST['cantidadTurnos']);
 
+    // Asignar capacidad por defecto a 1 si el formato es 'individual'
+    if ($formatoTurno == 'individual') {
+        $capacidadTurno = 1;
+    }
+
     // Procesar la imagen
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['imagen']['tmp_name'];
@@ -69,3 +74,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conn->close();
 }
 ?>
+
