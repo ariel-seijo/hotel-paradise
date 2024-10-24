@@ -102,6 +102,7 @@ if (isset($_GET['id'])) {
                             <label for="horario" class="form-label">Horario del Turno</label>
                             <input type="text" class="form-control" id="horario" readonly>
                         </div>
+                        <input type="hidden" id="cupoId" value=""> <!-- ID del cupo -->
                         <button type="submit" class="btn btn-primary d-none" id="btnGuardarReserva">Guardar Reserva</button>
                     </form>
                 </div>
@@ -138,16 +139,23 @@ if (isset($_GET['id'])) {
         });
 
         // Al abrir el modal, autocompletar los campos de actividad y horario
+        // Al abrir el modal, autocompletar los campos de actividad, horario y cupo
         $('#exampleModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Botón que abrió el modal
             var actividad = button.data('actividad'); // Obtener el nombre de la actividad
             var horario = button.data('horario'); // Obtener el horario del turno
+            var cupoId = button.data('cupo-id'); // Obtener el ID del cupo
 
             // Asignar los valores a los campos correspondientes
             document.getElementById('actividad').value = actividad;
             document.getElementById('horario').value = horario;
+
+            // Guardar el ID del cupo en un campo oculto
+            document.getElementById('cupoId').value = cupoId;
         });
 
+
+        // Confirmación al guardar la reserva
         // Confirmación al guardar la reserva
         // Confirmación al guardar la reserva
         document.getElementById('reservaForm').addEventListener('submit', function(event) {
@@ -157,7 +165,7 @@ if (isset($_GET['id'])) {
                 var datosReserva = new FormData();
                 datosReserva.append('huesped_dni', document.getElementById('dni').value);
                 datosReserva.append('actividad_id', document.getElementById('actividadId').value);
-                datosReserva.append('turno_horario', document.getElementById('horario').value);
+                datosReserva.append('cupo_id', document.getElementById('cupoId').value); // Usar el ID del cupo
 
                 // Enviar datos a guardar-reserva.php
                 fetch('../SCRIPT/guardar-reserva.php', {
@@ -210,240 +218,3 @@ if (isset($_GET['id'])) {
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TURNOS - Hotel Paradise</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../ESTILOS/turnos-estilo.css">
-</head>
-<body> -->
-<!-- include 'navbar.php'; -->
-
-<!-- <div class="container contenedor-principal">
-        <div class="row"> -->
-
-<!-- SECCION DE INFORMACION DE ACTIVIDAD -->
-
-<!-- <div class="col-3 seccion-info">
-                <img src="../IMAGENES/actividad-gimnasio.jpg" class="imagen-actividad">
-                <p class="h3 text-center">Nombre Actividad</p>
-                <p class="h6 text-center">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores, atque dolorum. Reiciendis voluptatibus, nihil temporibus id facilis exercitationem quod impedit, qui modi deserunt vitae nam maiores ex soluta cumque? Obcaecati.</p>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Días: Lunes a Viernes</li>
-                    <li class="list-group-item">Horario: 09:00 a 18:00</li>
-                    <li class="list-group-item">Duración de turno: 30 minutos</li>
-                    <li class="list-group-item">Capacidad del turno: 2 personas</li>
-                    <li class="list-group-item">Cantidad de turnos: 7</li>
-                </ul>
-            </div> -->
-<!-- </div>
-</div> -->
-<!-- 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
-
-</html> -->
-
-
-<!-- <div class="accordion-item">
-                        <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                            <div class="row">
-                                <div class="col-2">
-                                    09:00
-                                </div>
-                                <div class="col-3">
-                                    Turno disponible
-                                </div>
-                                <div class="col-3">
-                                    Ocupado: 0 / 0
-                                </div>
-                                <div class="col-4">
-                                </div>
-                            </div>
-                        </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col-2">
-                                        1 / 2
-                                    </div>
-                                    <div class="col-3">
-                                        Ocupado
-                                    </div>
-                                    <div class="col-3">
-                                        Nombre de huésped
-                                    </div>
-                                    <div class="col-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
-                            <div class="row">
-                                <div class="col-2">
-                                    09:00
-                                </div>
-                                <div class="col-3">
-                                    Turno disponible
-                                </div>
-                                <div class="col-3">
-                                    Ocupado: 0 / 0
-                                </div>
-                                <div class="col-4">
-                                </div>
-                            </div>
-                        </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col-2">
-                                        1 / 2
-                                    </div>
-                                    <div class="col-3">
-                                        Ocupado
-                                    </div>
-                                    <div class="col-3">
-                                        Nombre de huésped
-                                    </div>
-                                    <div class="col-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseThree">
-                            <div class="row">
-                                <div class="col-2">
-                                    09:00
-                                </div>
-                                <div class="col-3">
-                                    Turno disponible
-                                </div>
-                                <div class="col-3">
-                                    Ocupado: 0 / 0
-                                </div>
-                                <div class="col-4">
-                                </div>
-                            </div>
-                        </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col-2">
-                                        1 / 2
-                                    </div>
-                                    <div class="col-3">
-                                        Ocupado
-                                    </div>
-                                    <div class="col-3">
-                                        Nombre de huésped
-                                    </div>
-                                    <div class="col-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseFour">
-                            <div class="row">
-                                <div class="col-2">
-                                    09:00
-                                </div>
-                                <div class="col-3">
-                                    Turno disponible
-                                </div>
-                                <div class="col-3">
-                                    Ocupado: 0 / 0
-                                </div>
-                                <div class="col-4">
-                                </div>
-                            </div>
-                        </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col-2">
-                                        1 / 2
-                                    </div>
-                                    <div class="col-3">
-                                        Ocupado
-                                    </div>
-                                    <div class="col-3">
-                                        Nombre de huésped
-                                    </div>
-                                    <div class="col-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseFive">
-                            <div class="row">
-                                <div class="col-2">
-                                    09:00
-                                </div>
-                                <div class="col-3">
-                                    Turno disponible
-                                </div>
-                                <div class="col-3">
-                                    Ocupado: 0 / 0
-                                </div>
-                                <div class="col-4">
-                                </div>
-                            </div>
-                        </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col-2">
-                                        1 / 2
-                                    </div>
-                                    <div class="col-3">
-                                        Ocupado
-                                    </div>
-                                    <div class="col-3">
-                                        Nombre de huésped
-                                    </div>
-                                    <div class="col-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->

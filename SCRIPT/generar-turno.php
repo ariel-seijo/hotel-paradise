@@ -1,6 +1,5 @@
 <?php
 // Incluir la conexión a la base de datos
-// Incluir la conexión a la base de datos
 include 'conexion.php';
 
 // Verificar si se ha enviado un ID de actividad
@@ -33,9 +32,17 @@ if (isset($_GET['id'])) {
                 $hora = $turno['horario'];
                 $collapseId = 'panelsStayOpen-collapse' . $i;
 
-                // Contador de cupos ocupados (esto es un ejemplo, puedes obtenerlo de una tabla de reservas si la tienes)
-                $cuposOcupados = rand(0, $capacidadTurno); // Simula los cupos ocupados
-                $estadoTurno = ($cuposOcupados < $capacidadTurno) ? "Turno disponible" : "Turno lleno";
+                // Consulta para contar cuántos cupos están ocupados para este horario
+                $stmtCuposOcupados = $conn->prepare("SELECT COUNT(*) as ocupados FROM reservas WHERE actividad_id = ? AND cupo_id = ?");
+                $cupoId = $i; // Suponiendo que el ID de cupo es el índice en el bucle
+                $stmtCuposOcupados->bind_param("ii", $actividadId, $cupoId);
+                $stmtCuposOcupados->execute();
+                $resultadoCupos = $stmtCuposOcupados->get_result();
+                $ocupados = $resultadoCupos->fetch_assoc()['ocupados'];
+
+                // Calcular el estado del turno
+                $cuposOcupados = $ocupados; // Número de cupos ocupados
+                $estadoTurno = ($cuposOcupados < $capacidadTurno) ? "Turno disponible" : "Turno ocupado";
 
                 // Mostrar el encabezado del turno en el acordeón
                 echo '
@@ -55,19 +62,22 @@ if (isset($_GET['id'])) {
 
                 // Generar los cupos dentro del acordeón
                 for ($j = 1; $j <= $capacidadTurno; $j++) {
-                    // Alternar entre "ocupado" y "disponible" para simular el estado de los cupos
+                    // Determinar el estado del cupo
+                    $estadoCupo = "Disponible";
+                    $nombreHuesped = "- - -";
+                    $colorClase = 'bg-disponible'; // Verde pastel
+
+                    // Si el cupo está ocupado, actualizar el estado
                     if ($j <= $cuposOcupados) {
                         $estadoCupo = "Ocupado";
-                        $nombreHuesped = "Alfonso"; // Aquí puedes poner el nombre real si tienes una tabla de reservas
+                        $nombreHuesped = "Huésped"; // Aquí podrías obtener el nombre del huésped si se almacena
                         $colorClase = 'bg-ocupado'; // Rojo pastel
-                        $botonReserva = ''; // No se muestra el botón si está ocupado
-                    } else {
-                        $estadoCupo = "Disponible";
-                        $nombreHuesped = "- - -";
-                        $colorClase = 'bg-disponible'; // Verde pastel
-                        // Aquí añadimos los atributos data-actividad y data-horario al botón
-                        $botonReserva = '<button type="button" class="btn btn-primary reservar-btn" data-actividad="' . htmlspecialchars($actividad['nombre']) . '" data-horario="' . htmlspecialchars($hora) . '" data-bs-toggle="modal" data-bs-target="#exampleModal">Reservar</button>'; // Mostrar botón reservar si está disponible
                     }
+
+                    // Aquí añadimos los atributos data-actividad y data-horario al botón
+                    $botonReserva = ($estadoCupo == "Disponible") ? 
+                        '<button type="button" class="btn btn-primary reservar-btn" data-actividad="' . htmlspecialchars($actividad['nombre']) . '" data-horario="' . htmlspecialchars($hora) . '" data-cupo-id="' . $j . '" data-bs-toggle="modal" data-bs-target="#exampleModal">Reservar</button>' : 
+                        '<button type="button" class="btn btn-secondary" disabled>No disponible</button>'; // Botón deshabilitado si no está disponible
 
                     // Mostrar cada cupo dentro del acordeón
                     echo '
