@@ -77,6 +77,7 @@ if (isset($_GET['id'])) {
                 </div>
                 <div class="modal-body">
                     <form id="reservaForm">
+                        <input type="hidden" id="actividadId" value="<?php echo htmlspecialchars($actividadId); ?>"> <!-- ID de actividad -->
                         <div class="mb-3">
                             <label for="dni" class="form-label">DNI</label>
                             <input type="text" class="form-control" id="dni" required>
@@ -101,7 +102,7 @@ if (isset($_GET['id'])) {
                             <label for="horario" class="form-label">Horario del Turno</label>
                             <input type="text" class="form-control" id="horario" readonly>
                         </div>
-                        <button type="submit" class="btn btn-primary">Guardar Reserva</button>
+                        <button type="submit" class="btn btn-primary d-none" id="btnGuardarReserva">Guardar Reserva</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -115,9 +116,11 @@ if (isset($_GET['id'])) {
         document.getElementById('btnVerificar').addEventListener('click', function() {
             var dni = document.getElementById('dni').value;
             var mensajeError = document.getElementById('mensajeError');
+            var btnGuardarReserva = document.getElementById('btnGuardarReserva'); // Obtiene el botón
 
             // Limpia el mensaje de error
             mensajeError.style.display = 'none';
+            btnGuardarReserva.classList.add('d-none'); // Oculta el botón al inicio
 
             // Verifica el DNI en la base de datos
             fetch('../SCRIPT/verificar-dni.php?dni=' + dni)
@@ -127,11 +130,13 @@ if (isset($_GET['id'])) {
                         // Autocompletar campos
                         document.getElementById('nombre').value = data.nombre;
                         document.getElementById('correo').value = data.correo;
+                        btnGuardarReserva.classList.remove('d-none'); // Muestra el botón si se encuentra el DNI
                     } else {
                         mensajeError.style.display = 'block';
                     }
                 });
         });
+
         // Al abrir el modal, autocompletar los campos de actividad y horario
         $('#exampleModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Botón que abrió el modal
@@ -141,6 +146,39 @@ if (isset($_GET['id'])) {
             // Asignar los valores a los campos correspondientes
             document.getElementById('actividad').value = actividad;
             document.getElementById('horario').value = horario;
+        });
+
+        // Confirmación al guardar la reserva
+        // Confirmación al guardar la reserva
+        document.getElementById('reservaForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevenir el envío inmediato del formulario
+            if (confirm('¿Está seguro de que desea guardar esta reserva?')) {
+                // Preparar datos para enviar
+                var datosReserva = new FormData();
+                datosReserva.append('huesped_dni', document.getElementById('dni').value);
+                datosReserva.append('actividad_id', document.getElementById('actividadId').value);
+                datosReserva.append('turno_horario', document.getElementById('horario').value);
+
+                // Enviar datos a guardar-reserva.php
+                fetch('../SCRIPT/guardar-reserva.php', {
+                        method: 'POST',
+                        body: datosReserva
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            // Opcional: Cerrar el modal o limpiar el formulario aquí
+                            $('#exampleModal').modal('hide');
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Ocurrió un error al guardar la reserva.');
+                    });
+            }
         });
     </script>
 
