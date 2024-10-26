@@ -138,7 +138,6 @@ if (isset($_GET['id'])) {
                 });
         });
 
-        // Al abrir el modal, autocompletar los campos de actividad y horario
         // Al abrir el modal, autocompletar los campos de actividad, horario y cupo
         $('#exampleModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Botón que abrió el modal
@@ -155,8 +154,6 @@ if (isset($_GET['id'])) {
         });
 
 
-        // Confirmación al guardar la reserva
-        // Confirmación al guardar la reserva
         // Confirmación al guardar la reserva
         document.getElementById('reservaForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevenir el envío inmediato del formulario
@@ -176,8 +173,7 @@ if (isset($_GET['id'])) {
                     .then(data => {
                         if (data.success) {
                             alert(data.message);
-                            // Opcional: Cerrar el modal o limpiar el formulario aquí
-                            $('#exampleModal').modal('hide');
+                            location.reload();
                         } else {
                             alert(data.message);
                         }
@@ -212,8 +208,69 @@ if (isset($_GET['id'])) {
                     <?php include('../SCRIPT/generar-turno.php'); ?>
                 </div>
             </div>
+
         </div>
     </div>
+    <!-- Modal para Confirmar Eliminación -->
+    <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eliminarModalLabel">Eliminar Reserva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro de que desea eliminar esta reserva?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Variables para almacenar datos de la reserva a eliminar
+        let huespedDniEliminar, cupoIdEliminar;
+
+        // Al abrir el modal de eliminar, asignar los datos
+        $('#eliminarModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            huespedDniEliminar = button.data('huesped-dni');
+            cupoIdEliminar = button.data('cupo-id');
+        });
+
+        // Al presionar el botón de confirmar eliminación
+        document.getElementById('btnConfirmarEliminar').addEventListener('click', function() {
+            // Preparar datos para enviar
+            var datosEliminar = new FormData();
+            datosEliminar.append('huesped_dni', huespedDniEliminar);
+            datosEliminar.append('cupo_id', cupoIdEliminar);
+
+            // Enviar datos a eliminar-reserva.php
+            fetch('../SCRIPT/eliminar-reserva.php', {
+                    method: 'POST',
+                    body: datosEliminar
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        // Opcional: Refrescar la página o actualizar la interfaz
+                        location.reload(); // Esto recargará la página
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al eliminar la reserva.');
+                });
+
+            // Cerrar el modal
+            $('#eliminarModal').modal('hide');
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

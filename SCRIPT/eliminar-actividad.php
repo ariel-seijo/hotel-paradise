@@ -5,13 +5,21 @@ include 'conexion.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $idActividad = intval($_POST['id']); // Obtener el ID de la actividad de forma segura
 
-    // Primero, eliminar los registros asociados en turnos_horarios
+    // Primero, eliminar los registros asociados en reservas
+    $sqlDeleteReservas = "DELETE r FROM reservas r
+                          JOIN turnos_horarios th ON r.cupo_id = th.id
+                          WHERE th.actividad_id = ?";
+    $stmt = $conn->prepare($sqlDeleteReservas);
+    $stmt->bind_param("i", $idActividad);
+    $stmt->execute();
+
+    // Luego, eliminar los registros asociados en turnos_horarios
     $sqlDeleteTurnos = "DELETE FROM turnos_horarios WHERE actividad_id = ?";
     $stmt = $conn->prepare($sqlDeleteTurnos);
     $stmt->bind_param("i", $idActividad);
     $stmt->execute();
     
-    // Luego, eliminar el registro en actividades
+    // Finalmente, eliminar el registro en actividades
     $sqlDeleteActividad = "DELETE FROM actividades WHERE id = ?";
     $stmt = $conn->prepare($sqlDeleteActividad);
     $stmt->bind_param("i", $idActividad);
@@ -25,3 +33,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Cerrar la conexión
 $conn->close();
 ?>
+
+
