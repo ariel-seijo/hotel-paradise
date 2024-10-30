@@ -6,8 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADMINISTRACIÓN - Hotel Paradise</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../ESTILOS/panel-administrador-estilo.css">
     <link rel="stylesheet" href="../ESTILOS/administrador-actividades-estilo.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -22,14 +26,7 @@
             </div>
             <div class="col-9 seccion-elegida">
                 <h1 class="display-1 text-center">PANEL DE ACTIVIDADES</h1>
-                <div class="contenedor-actividades d-flex flex-wrap">
-                    <?php include '../SCRIPT/generar-actividad.php'; ?>
-                    <a class="btn btn-light btn-agregar-actividad" href="agregar-actividad.php" role="button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                        </svg>
-                    </a>
-                </div>
+                <?php include '../SCRIPT/listar_actividades.php'; ?>
             </div>
         </div>
     </div>
