@@ -42,10 +42,38 @@ $result = $stmt->get_result();
                 <th>Imagen</th>
                 <th>Nombre</th>
                 <th>Acciones</th>
+                <th>Horarios</th>
             </tr>
         </thead>
         <tbody>
             <?php while ($row = $result->fetch_assoc()): ?>
+                <!-- Modal para Agregar Horario -->
+                <div class="modal fade" id="agregarHorarioModal" tabindex="-1" aria-labelledby="agregarHorarioLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form id="formAgregarHorario" method="POST" action="../SCRIPT/agregar_horario.php">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="agregarHorarioLabel">Agregar Horario</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="horarioInfo"></div> <!-- Información del rango de horarios -->
+                                    <input type="hidden" name="actividad_id" id="modalActividadId">
+                                    <div class="form-group">
+                                        <label for="horario">Horario</label>
+                                        <input type="time" class="form-control" id="horario" name="horario" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" id="confirmarGuardar">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <tr>
                     <td>
                         <?php if ($row['imagen']): ?>
@@ -58,40 +86,64 @@ $result = $stmt->get_result();
                     <td>
                         <!-- Botón de editar -->
                         <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarActividadModal" data-id="<?php echo $row['id']; ?>" onclick="cargarDatosActividad(this)">Editar</button>
-                        <!-- Botón de eliminar -->
-    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal<?php echo $row['id']; ?>">
-        Eliminar
-    </button>
+                        <!-- Suponiendo que estás usando Bootstrap para el modal de confirmación -->
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal<?php echo $row['id']; ?>">
+                            Eliminar
+                        </button>
+                    <td>
+                        <!-- Botón para Agregar Horario -->
+                        <button class="btn btn-info btn-sm" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
+                            Agregar Horario
+                        </button>
 
-    <!-- Modal de confirmación -->
-    <div class="modal fade" id="confirmDeleteModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmar eliminación</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar esta actividad?</p>
-                </div>
-                <div class="modal-footer">
-                    <form action="../SCRIPT/eliminar_actividad.php" method="POST">
-                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <!-- Botón para Editar Horario -->
+                        <button class="btn btn-secondary btn-sm">
+                            Editar Horario
+                        </button>
+                        <script>
+                            function abrirAgregarHorarioModal(actividadId) {
+                                console.log(`Abriendo modal para actividad ID: ${actividadId}`); // Verifica si actividadId se envía correctamente
+
+                                fetch(`../SCRIPT/obtener_rango_horarios.php?actividad_id=${actividadId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            document.getElementById('horarioInfo').innerText = `Rango permitido: ${data.horario_inicio} - ${data.horario_cierre}`;
+                                            document.getElementById('modalActividadId').value = actividadId;
+                                            document.getElementById('formAgregarHorario').dataset.horarioInicio = data.horario_inicio;
+                                            document.getElementById('formAgregarHorario').dataset.horarioCierre = data.horario_cierre;
+
+                                            $('#agregarHorarioModal').modal('show');
+                                        } else {
+                                            alert("Error al cargar los datos de la actividad.");
+                                        }
+                                    })
+                                    .catch(error => console.error("Error:", error));
+                            }
+
+                            document.getElementById('confirmarGuardar').addEventListener('click', function() {
+                                const form = document.getElementById('formAgregarHorario');
+                                const horario = form.horario.value;
+                                const horarioInicio = form.dataset.horarioInicio;
+                                const horarioCierre = form.dataset.horarioCierre;
+
+                                // Validar que el horario esté dentro del rango
+                                if (horario >= horarioInicio && horario <= horarioCierre) {
+                                    if (confirm("¿Desea guardar este horario?")) {
+                                        form.submit();
+                                    }
+                                } else {
+                                    alert(`El horario debe estar entre ${horarioInicio} y ${horarioCierre}.`);
+                                }
+                            });
+                        </script>
                     </td>
                 </tr>
             <?php endwhile; ?>
         </tbody>
     </table>
 </div>
+
 
 <!-- Modal para agregar actividad -->
 <div class="modal fade" id="agregarActividadModal" tabindex="-1" role="dialog" aria-labelledby="agregarActividadModalLabel" aria-hidden="true">
