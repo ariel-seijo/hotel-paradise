@@ -87,14 +87,12 @@ $result = $stmt->get_result();
                             </div>
                         </div>
                     <td>
-                        <!-- Botón para Agregar Horario -->
-                        <button class="btn btn-info btn-sm" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
-                            Agregar Horario
+                        <!-- Botones de Agregar y Editar Horarios -->
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#agregarHorarioModal" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
+                            Agregar horario
                         </button>
-
-                        <!-- Botón para Editar Horario -->
-                        <button class="btn btn-secondary btn-sm">
-                            Editar Horario
+                        <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#editarHorariosModal<?php echo $row['id']; ?>">
+                            Editar Horarios
                         </button>
                     </td>
                 </tr>
@@ -103,6 +101,29 @@ $result = $stmt->get_result();
     </table>
 </div>
 
+<!-- Modal de Agregar Horario -->
+<div class="modal fade" id="agregarHorarioModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Horario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formAgregarHorario">
+                    <input type="hidden" id="actividadId">
+                    <div class="form-group">
+                        <label for="nuevoHorario">Horario</label>
+                        <input type="time" id="nuevoHorario" class="form-control" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="guardarHorario()">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal para agregar actividad -->
 <div class="modal fade" id="agregarActividadModal" tabindex="-1" role="dialog" aria-labelledby="agregarActividadModalLabel" aria-hidden="true">
@@ -269,6 +290,60 @@ $result = $stmt->get_result();
 </div>
 
 <script>
+    let horarioInicio, horarioCierre;
+
+    function abrirAgregarHorarioModal(actividadId) {
+        // Guardar el ID de la actividad en el modal
+        document.getElementById('actividadId').value = actividadId;
+
+        // Hacer una solicitud Ajax para obtener el horario_inicio y horario_cierre de la actividad
+        fetch(`../SCRIPT/obtenerRangoHorario.php?id=${actividadId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    horarioInicio = data.horario_inicio;
+                    horarioCierre = data.horario_cierre;
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => console.error('Error al obtener el rango de horarios:', error));
+    }
+
+    function guardarHorario() {
+        const actividadId = document.getElementById('actividadId').value;
+        const horario = document.getElementById('nuevoHorario').value;
+
+        // Verificar si el horario está en el rango permitido
+        if (horario >= horarioInicio && horario <= horarioCierre) {
+            // Enviar el horario al servidor para guardarlo
+            fetch('../SCRIPT/agregarHorario.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        actividad_id: actividadId,
+                        horario: horario
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Horario agregado correctamente');
+                        $('#agregarHorarioModal').modal('hide'); // Cerrar el modal
+                        location.reload(); // Recargar la página
+                    } else {
+                        alert(data.error || 'Error al agregar el horario');
+                    }
+                })
+                .catch(error => console.error('Error al agregar el horario:', error));
+        } else {
+            alert(`El horario debe estar entre ${horarioInicio} y ${horarioCierre}.`);
+        }
+    }
+
+
     function cargarDatosActividad(button) {
         // Obtener el ID de la actividad desde el atributo data-id del botón
         var id = button.getAttribute('data-id');
