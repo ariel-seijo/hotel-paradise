@@ -42,6 +42,7 @@ $result = $stmt->get_result();
                 <th>Imagen</th>
                 <th>Nombre</th>
                 <th>Acciones</th>
+                <th>Horarios</th>
             </tr>
         </thead>
         <tbody>
@@ -58,40 +59,50 @@ $result = $stmt->get_result();
                     <td>
                         <!-- Botón de editar -->
                         <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarActividadModal" data-id="<?php echo $row['id']; ?>" onclick="cargarDatosActividad(this)">Editar</button>
-                        <!-- Botón de eliminar -->
-    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal<?php echo $row['id']; ?>">
-        Eliminar
-    </button>
+                        <!-- Suponiendo que estás usando Bootstrap para el modal de confirmación -->
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal<?php echo $row['id']; ?>">
+                            Eliminar
+                        </button>
+                        <!-- Modal de confirmación -->
+                        <div class="modal fade" id="confirmDeleteModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirmar eliminación</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Estás seguro de que deseas eliminar esta actividad?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="../SCRIPT/eliminar_actividad.php" method="POST">
+                                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <td>
+                        <!-- Botón para Agregar Horario -->
+                        <button class="btn btn-info btn-sm" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
+                            Agregar Horario
+                        </button>
 
-    <!-- Modal de confirmación -->
-    <div class="modal fade" id="confirmDeleteModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmar eliminación</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar esta actividad?</p>
-                </div>
-                <div class="modal-footer">
-                    <form action="../SCRIPT/eliminar_actividad.php" method="POST">
-                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <!-- Botón para Editar Horario -->
+                        <button class="btn btn-secondary btn-sm">
+                            Editar Horario
+                        </button>
                     </td>
                 </tr>
             <?php endwhile; ?>
         </tbody>
     </table>
 </div>
+
 
 <!-- Modal para agregar actividad -->
 <div class="modal fade" id="agregarActividadModal" tabindex="-1" role="dialog" aria-labelledby="agregarActividadModalLabel" aria-hidden="true">
