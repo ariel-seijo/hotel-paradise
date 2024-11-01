@@ -22,9 +22,7 @@ if ($id) {
     } else {
         echo json_encode(['success' => false, 'error' => 'Actividad no encontrada']);
     }
-} else {
-    echo json_encode(['success' => false, 'error' => 'ID de actividad no válido']);
-}
+};
 
 $conn->close();
 ?>

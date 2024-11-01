@@ -91,14 +91,34 @@ $result = $stmt->get_result();
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#agregarHorarioModal" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
                             Agregar horario
                         </button>
-                        <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#editarHorariosModal<?php echo $row['id']; ?>">
-                            Editar Horarios
+                        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#editarHorariosModal" onclick="abrirEditarHorariosModal(<?php echo $row['id']; ?>)">
+                            Editar horarios
                         </button>
                     </td>
                 </tr>
             <?php endwhile; ?>
         </tbody>
     </table>
+</div>
+
+<!-- Modal de Editar Horarios -->
+<div class="modal fade" id="editarHorariosModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Horarios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="horariosContainer">
+                <!-- Los campos de horario se cargarán aquí mediante JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal de Agregar Horario -->
@@ -292,6 +312,118 @@ $result = $stmt->get_result();
 <script>
     let horarioInicio, horarioCierre;
 
+    function abrirEditarHorariosModal(actividadId) {
+        // Obtener el rango de horarios y los horarios de la actividad
+        fetch(`../SCRIPT/obtenerRangoHorario.php?id=${actividadId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    horarioInicio = data.horario_inicio;
+                    horarioCierre = data.horario_cierre;
+
+                    // Obtener los horarios asociados a la actividad
+                    fetch(`../SCRIPT/obtenerHorariosActividad.php?id=${actividadId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const horariosContainer = document.getElementById('horariosContainer');
+                                horariosContainer.innerHTML = ''; // Limpiar el contenedor
+
+                                data.horarios.forEach(horario => {
+                                    const horarioRow = document.createElement('div');
+                                    horarioRow.className = 'form-group d-flex align-items-center';
+
+                                    // Campo de horario
+                                    const horarioInput = document.createElement('input');
+                                    horarioInput.type = 'time';
+                                    horarioInput.value = horario.horario;
+                                    horarioInput.className = 'form-control mr-2';
+                                    horarioInput.disabled = true; // Deshabilitado por defecto
+                                    horarioInput.dataset.horarioId = horario.id;
+
+                                    // Botón Editar
+                                    const editButton = document.createElement('button');
+                                    editButton.className = 'btn btn-warning btn-sm mr-2';
+                                    editButton.innerText = 'Editar';
+                                    editButton.onclick = () => {
+                                        horarioInput.disabled = !horarioInput.disabled;
+                                        editButton.innerText = horarioInput.disabled ? 'Editar' : 'Actualizar';
+
+                                        if (horarioInput.disabled) {
+                                            actualizarHorario(horario.id, horarioInput.value);
+                                        }
+                                    };
+
+                                    // Botón Eliminar
+                                    const deleteButton = document.createElement('button');
+                                    deleteButton.className = 'btn btn-danger btn-sm';
+                                    deleteButton.innerText = 'Eliminar';
+                                    deleteButton.onclick = () => eliminarHorario(horario.id);
+
+                                    // Agregar elementos al contenedor
+                                    horarioRow.appendChild(horarioInput);
+                                    horarioRow.appendChild(editButton);
+                                    horarioRow.appendChild(deleteButton);
+                                    horariosContainer.appendChild(horarioRow);
+                                });
+                            } else {
+                                alert(data.error);
+                            }
+                        });
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => console.error('Error al cargar el rango de horarios o los horarios de la actividad:', error));
+    }
+
+    function actualizarHorario(horarioId, nuevoHorario) {
+        // Verificar que el horario esté dentro del rango permitido
+        if (nuevoHorario >= horarioInicio && nuevoHorario <= horarioCierre) {
+            // Enviar el nuevo horario al servidor
+            fetch('../SCRIPT/actualizarHorario.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        horario_id: horarioId,
+                        horario: nuevoHorario
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Horario actualizado correctamente');
+                    } else {
+                        alert(data.error || 'Error al actualizar el horario');
+                    }
+                })
+                .catch(error => console.error('Error al actualizar el horario:', error));
+        } else {
+            alert(`El horario debe estar entre ${horarioInicio} y ${horarioCierre}.`);
+        }
+    }
+
+    function eliminarHorario(horarioId) {
+        if (confirm('¿Estás seguro de que deseas eliminar este horario?')) {
+            fetch(`../SCRIPT/eliminarHorario.php?id=${horarioId}`, {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Horario eliminado correctamente');
+                        $('#editarHorarioModal').modal('hide'); // Cerrar el modal
+                        location.reload();;
+                    } else {
+                        alert(data.error || 'Error al eliminar el horario');
+                    }
+                })
+                .catch(error => console.error('Error al eliminar el horario:', error));
+        }
+    }
+
     function abrirAgregarHorarioModal(actividadId) {
         // Guardar el ID de la actividad en el modal
         document.getElementById('actividadId').value = actividadId;
@@ -342,7 +474,6 @@ $result = $stmt->get_result();
             alert(`El horario debe estar entre ${horarioInicio} y ${horarioCierre}.`);
         }
     }
-
 
     function cargarDatosActividad(button) {
         // Obtener el ID de la actividad desde el atributo data-id del botón
