@@ -92,12 +92,16 @@ if (isset($_GET['id'])) {
                                     <td id="estado-<?php echo $turnoId; ?>"><?php echo $estado; ?></td>
                                     <td id="huesped-<?php echo $turnoId; ?>"><?php echo $huespedDNI; ?></td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" onclick="reservarTurno('<?php echo htmlspecialchars($turnoId); ?>', '<?php echo htmlspecialchars($horario['horario']); ?>')">Reservar</button>
-                                        <button class="btn btn-danger btn-sm" style="display:none;" onclick="cancelarReserva('<?php echo $turnoId; ?>')">Cancelar Reserva</button>
+                                        <?php if ($estado === 'Libre'): ?>
+                                            <button class="btn btn-primary btn-sm" onclick="reservarTurno('<?php echo htmlspecialchars($turnoId); ?>', '<?php echo htmlspecialchars($horario['horario']); ?>')">Reservar</button>
+                                        <?php else: ?>
+                                            <button class="btn btn-danger btn-sm" onclick="cancelarReserva('<?php echo htmlspecialchars($turnoId); ?>')">Cancelar Reserva</button>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endfor; ?>
                         </tbody>
+
 
 
                     </table>
@@ -157,6 +161,37 @@ if (isset($_GET['id'])) {
 </div>
 
 <script>
+    function cancelarReserva(turnoId) {
+        if (confirm("¿Estás seguro de que deseas cancelar la reserva para el turno " + turnoId + "?")) {
+            fetch('../SCRIPT/cancelar_reserva.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        turnoId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Reserva cancelada con éxito.');
+                        // Actualiza la tabla para reflejar la cancelación
+                        document.getElementById('estado-' + turnoId).innerText = 'Libre';
+                        document.getElementById('huesped-' + turnoId).innerText = '';
+                        const button = document.querySelector(`tr#${turnoId} button`);
+                        button.innerText = 'Reservar';
+                        button.classList.remove('btn-danger');
+                        button.classList.add('btn-primary');
+                    } else {
+                        alert('Error al cancelar la reserva: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+
+
     function reservarTurno(turnoId, horario) {
         // Establecer los valores en el modal
         document.getElementById('horarioActividad').value = horario; // Ahora aquí se establecerá el horario correcto
