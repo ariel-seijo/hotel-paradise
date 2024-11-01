@@ -71,7 +71,7 @@ if (isset($_GET['id'])) {
                                     <td id="estado-<?php echo $turnoId; ?>">Libre</td>
                                     <td id="huesped-<?php echo $turnoId; ?>"></td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" onclick="reservarTurno('<?php echo $turnoId; ?>', '<?php echo htmlspecialchars($actividad['nombre']); ?>', '<?php echo htmlspecialchars($horario['horario']); ?>')">Reservar</button>
+                                        <button class="btn btn-primary btn-sm" onclick="reservarTurno('<?php echo htmlspecialchars($turnoId); ?>', '<?php echo htmlspecialchars($horario['horario']); ?>')">Reservar</button>
                                         <button class="btn btn-danger btn-sm" style="display:none;" onclick="cancelarReserva('<?php echo $turnoId; ?>')">Cancelar Reserva</button>
                                     </td>
                                 </tr>
@@ -94,6 +94,10 @@ if (isset($_GET['id'])) {
             </div>
             <div class="modal-body">
                 <form id="reservarForm">
+                    <div hidden class="mb-3">
+                        <label for="turnoId" class="form-label"></label>
+                        <input type="text" class="form-control" id="turnoId" required value="<?php echo $turnoId?>">
+                    </div>
                     <div class="mb-3">
                         <label for="dniHuesped" class="form-label">DNI Huésped</label>
                         <input type="text" class="form-control" id="dniHuesped" required>
@@ -128,6 +132,62 @@ if (isset($_GET['id'])) {
 </div>
 
 <script>
+    function reservarTurno(turnoId, horario) {
+        // Establecer los valores en el modal
+        document.getElementById('horarioActividad').value = horario;// Ahora aquí se establecerá el horario correcto
+        document.getElementById('turnoId').value = turnoId; 
+        // Abrir el modal
+        $('#reservarModal').modal('show');
+    }
+
+    document.getElementById('reservarForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevenir el envío normal del formulario
+
+        const dni = document.getElementById('dniHuesped').value;
+        const actividadId = <?php echo $actividadId ?>;
+        const fecha = document.getElementById('fechaActividad').value;
+        const horario = document.getElementById('horarioActividad').value;
+        const turnoId = document.getElementById('turnoId').value;
+        const cupoId = turnoId.split('-')[0];
+
+        // Console log all values
+        console.log('DNI:', dni);
+        console.log('ActividadId:', actividadId);
+        console.log('Fecha:', fecha);
+        console.log('Horario:', horario);
+        console.log('Cupo ID:', cupoId);
+        console.log('Turno ID:', turnoId);
+
+        // Enviar los datos al archivo de guardar reserva
+        fetch('../SCRIPT/guardar_reserva.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    dni,
+                    actividadId,
+                    fecha,
+                    horario,
+                    cupoId, // Enviar el cupo_id
+                    turnoId // Enviar el turnoId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reserva realizada con éxito.');
+                    $('#reservarModal').modal('hide'); // Cerrar el modal
+                    // Aquí puedes actualizar el estado de los turnos o realizar otras acciones
+                } else {
+                    alert('Error al realizar la reserva: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+
+
     document.getElementById('fechaActividad').addEventListener('change', function() {
         const fechaSeleccionada = new Date(this.value + "T00:00:00Z"); // Fuerza UTC para evitar desfase de zona horaria
 
@@ -181,14 +241,6 @@ if (isset($_GET['id'])) {
         return diasPermitidos;
     }
 
-
-    function reservarTurno(turnoId, actividadNombre, horario) {
-        // Establecer los valores en el modal
-        document.getElementById('horarioActividad').value = horario; // Ahora aquí se establecerá el horario correcto
-        // Abrir el modal
-        $('#reservarModal').modal('show');
-    }
-
     function verificarDNI() {
         const dni = document.getElementById('dniHuesped').value;
 
@@ -205,42 +257,4 @@ if (isset($_GET['id'])) {
             })
             .catch(error => console.error('Error:', error));
     }
-
-    document.getElementById('reservarForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
-
-        const dni = document.getElementById('dniHuesped').value;
-        const nombre = document.getElementById('nombreHuesped').value;
-        const correo = document.getElementById('correoHuesped').value;
-        const actividad = document.getElementById('nombreActividad').value;
-        const fecha = document.getElementById('fechaActividad').value;
-        const horario = document.getElementById('horarioActividad').value;
-
-        // Enviar los datos al archivo de guardar reserva
-        fetch('../SCRIPT/guardar-reserva.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    dni,
-                    nombre,
-                    correo,
-                    actividad,
-                    fecha,
-                    horario
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Reserva realizada con éxito.');
-                    $('#reservarModal').modal('hide'); // Cerrar el modal
-                    // Aquí puedes actualizar el estado de los turnos o realizar otras acciones
-                } else {
-                    alert('Error al realizar la reserva: ' + data.error);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
 </script>
