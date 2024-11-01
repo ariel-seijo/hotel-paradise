@@ -18,7 +18,7 @@
                 <a class="btn btn-primary w-100 btnPanel" href="#" role="button">Registro de turnos</a>
             </div>
             <div class="col-9 seccion-elegida">
-                
+               <?php include '../SCRIPT/generar_turnos.php' ?> 
             </div>
         </div>
     </div>
