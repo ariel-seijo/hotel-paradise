@@ -22,6 +22,11 @@ if (isset($_GET['id'])) {
         exit;
     }
 
+    // Asegúrate de que ya has obtenido la actividad previamente
+    if (isset($actividad)) {
+        $diaInicio = $actividad['dia_inicio'];
+        $diaFin = $actividad['dia_fin'];
+    }
     // Obtener los horarios de la actividad
     $horariosQuery = "SELECT id, horario FROM turnos_horarios WHERE actividad_id = ?";
     $horariosStmt = $conn->prepare($horariosQuery);
@@ -67,7 +72,6 @@ if (isset($_GET['id'])) {
                                     <td id="huesped-<?php echo $turnoId; ?>"></td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" onclick="reservarTurno('<?php echo $turnoId; ?>', '<?php echo htmlspecialchars($actividad['nombre']); ?>', '<?php echo htmlspecialchars($horario['horario']); ?>')">Reservar</button>
-
                                         <button class="btn btn-danger btn-sm" style="display:none;" onclick="cancelarReserva('<?php echo $turnoId; ?>')">Cancelar Reserva</button>
                                     </td>
                                 </tr>
@@ -113,7 +117,7 @@ if (isset($_GET['id'])) {
                     </div>
                     <div class="mb-3">
                         <label for="horarioActividad" class="form-label">Horario</label>
-                        <input type="text" class="form-control" id="horarioActividad" value="horarioActividad" readonly>
+                        <input type="text" class="form-control" id="horarioActividad" value="<?php echo htmlspecialchars($horario['horario']); ?>" readonly>
                     </div>
                     <button type="submit" class="btn btn-primary">Reservar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -124,6 +128,60 @@ if (isset($_GET['id'])) {
 </div>
 
 <script>
+    document.getElementById('fechaActividad').addEventListener('change', function() {
+        const fechaSeleccionada = new Date(this.value + "T00:00:00Z"); // Fuerza UTC para evitar desfase de zona horaria
+
+        // Validar que la fecha sea válida
+        if (isNaN(fechaSeleccionada)) {
+            alert("Fecha inválida. Por favor, selecciona una fecha válida.");
+            this.value = ''; // Limpiar el campo de fecha
+            return;
+        }
+
+        // Obtener el día de la semana en español
+        const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        const diaSeleccionado = diasSemana[fechaSeleccionada.getUTCDay()];
+        console.log("Día seleccionado:", diaSeleccionado);
+
+        // Obtener los días permitidos para la actividad
+        const diasPermitidos = obtenerDiasPermitidos();
+
+        // Verificar si el día seleccionado está dentro de los permitidos
+        if (!diasPermitidos.includes(diaSeleccionado)) {
+            alert('La fecha seleccionada no es válida. Debe ser un día entre ' + diasPermitidos.join(', '));
+            this.value = ''; // Limpiar el campo de fecha
+        }
+    });
+
+    // Función para obtener días permitidos en el intervalo
+    function obtenerDiasPermitidos() {
+        const diaInicio = "<?php echo strtolower($actividad['dia_inicio']); ?>";
+        const diaFin = "<?php echo strtolower($actividad['dia_fin']); ?>";
+
+        const diasDeLaSemana = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+        const diasPermitidos = [];
+
+        let agregarDias = false;
+        // Agregar días desde diaInicio hasta diaFin
+        for (const dia of diasDeLaSemana) {
+            if (dia === diaInicio) agregarDias = true;
+            if (agregarDias) diasPermitidos.push(dia);
+            if (dia === diaFin) break;
+        }
+
+        // Si no incluimos todos los días (caso cuando diaInicio está después de diaFin)
+        if (!diasPermitidos.includes(diaFin)) {
+            for (const dia of diasDeLaSemana) {
+                diasPermitidos.push(dia);
+                if (dia === diaFin) break;
+            }
+        }
+
+        console.log("Días permitidos:", diasPermitidos); // Muestra los días en la consola
+        return diasPermitidos;
+    }
+
+
     function reservarTurno(turnoId, actividadNombre, horario) {
         // Establecer los valores en el modal
         document.getElementById('horarioActividad').value = horario; // Ahora aquí se establecerá el horario correcto
@@ -139,27 +197,50 @@ if (isset($_GET['id'])) {
             .then(response => response.json())
             .then(data => {
                 if (data.encontrado) {
-                    // Si el DNI fue encontrado, autocompletar los campos
-                    document.getElementById('nombreHuesped').value = data.nombre;
-                    document.getElementById('correoHuesped').value = data.correo;
+                    document.getElementById('nombreHuesped').value = data.nombre; // Asigna el nombre encontrado
+                    document.getElementById('correoHuesped').value = data.correo; // Asigna el correo encontrado
                 } else {
-                    // Si no se encontró, informar al usuario
-                    alert('DNI no encontrado. Por favor, verifica e intenta de nuevo.');
-                    document.getElementById('nombreHuesped').value = '';
-                    document.getElementById('correoHuesped').value = '';
+                    alert('DNI no encontrado, por favor complete los datos.');
                 }
             })
-            .catch(error => {
-                console.error('Error al verificar el DNI:', error);
-                alert('Ocurrió un error al verificar el DNI. Intenta nuevamente más tarde.');
-            });
+            .catch(error => console.error('Error:', error));
     }
 
-
     document.getElementById('reservarForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        // Aquí deberías agregar la lógica para guardar la reserva
-        alert("Reserva realizada para " + document.getElementById('nombreHuesped').value);
-        $('#reservarModal').modal('hide');
+        event.preventDefault(); // Prevenir el envío normal del formulario
+
+        const dni = document.getElementById('dniHuesped').value;
+        const nombre = document.getElementById('nombreHuesped').value;
+        const correo = document.getElementById('correoHuesped').value;
+        const actividad = document.getElementById('nombreActividad').value;
+        const fecha = document.getElementById('fechaActividad').value;
+        const horario = document.getElementById('horarioActividad').value;
+
+        // Enviar los datos al archivo de guardar reserva
+        fetch('../SCRIPT/guardar-reserva.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    dni,
+                    nombre,
+                    correo,
+                    actividad,
+                    fecha,
+                    horario
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reserva realizada con éxito.');
+                    $('#reservarModal').modal('hide'); // Cerrar el modal
+                    // Aquí puedes actualizar el estado de los turnos o realizar otras acciones
+                } else {
+                    alert('Error al realizar la reserva: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
     });
 </script>
