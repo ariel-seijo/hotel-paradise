@@ -55,6 +55,7 @@ if (isset($_GET['id'])) {
                         <thead>
                             <tr>
                                 <th>Número de Turno</th>
+                                <th>ID</th>
                                 <th>Estado</th>
                                 <th>Huésped</th>
                                 <th>Acciones</th>
@@ -65,11 +66,31 @@ if (isset($_GET['id'])) {
                                 <?php
                                 // Crear una ID única para cada turno
                                 $turnoId = $horario['id'] . '-' . $i;
+
+                                // Inicializar variables para estado y huesped
+                                $estado = 'Libre'; // Inicializar el estado como 'Libre'
+                                $huespedDNI = ''; // Inicializar el DNI como vacío
+
+                                // Consulta para obtener el estado y el huesped_dni para este turno
+                                $query = "SELECT huesped_dni FROM reservas WHERE id = ?"; // Seleccionar la ID de la reserva
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param("s", $turnoId); // Cambia el tipo de parámetro a "s" si id es un string (ejemplo: '51-1')
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+
+                                // Verificar si hay reservas para este turno
+                                if ($row = $result->fetch_assoc()) {
+                                    $estado = 'Reservado'; // Cambiar el estado a 'Reservado'
+                                    $huespedDNI = $row['huesped_dni']; // Obtener el DNI del huésped
+                                }
+                                $stmt->close();
                                 ?>
-                                <tr>
+
+                                <tr id="<?php echo $turnoId; ?>">
                                     <td><?php echo $i . '/' . $actividad['capacidad_turno']; ?></td>
-                                    <td id="estado-<?php echo $turnoId; ?>">Libre</td>
-                                    <td id="huesped-<?php echo $turnoId; ?>"></td>
+                                    <td><?php echo $turnoId; ?></td>
+                                    <td id="estado-<?php echo $turnoId; ?>"><?php echo $estado; ?></td>
+                                    <td id="huesped-<?php echo $turnoId; ?>"><?php echo $huespedDNI; ?></td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" onclick="reservarTurno('<?php echo htmlspecialchars($turnoId); ?>', '<?php echo htmlspecialchars($horario['horario']); ?>')">Reservar</button>
                                         <button class="btn btn-danger btn-sm" style="display:none;" onclick="cancelarReserva('<?php echo $turnoId; ?>')">Cancelar Reserva</button>
@@ -77,9 +98,13 @@ if (isset($_GET['id'])) {
                                 </tr>
                             <?php endfor; ?>
                         </tbody>
+
+
                     </table>
                 </div>
             </div>
+
+
         </div>
     <?php endwhile; ?>
 </div>
@@ -96,7 +121,7 @@ if (isset($_GET['id'])) {
                 <form id="reservarForm">
                     <div hidden class="mb-3">
                         <label for="turnoId" class="form-label"></label>
-                        <input type="text" class="form-control" id="turnoId" required value="<?php echo $turnoId?>">
+                        <input type="text" class="form-control" id="turnoId" required value="<?php echo $turnoId ?>">
                     </div>
                     <div class="mb-3">
                         <label for="dniHuesped" class="form-label">DNI Huésped</label>
@@ -134,8 +159,8 @@ if (isset($_GET['id'])) {
 <script>
     function reservarTurno(turnoId, horario) {
         // Establecer los valores en el modal
-        document.getElementById('horarioActividad').value = horario;// Ahora aquí se establecerá el horario correcto
-        document.getElementById('turnoId').value = turnoId; 
+        document.getElementById('horarioActividad').value = horario; // Ahora aquí se establecerá el horario correcto
+        document.getElementById('turnoId').value = turnoId;
         // Abrir el modal
         $('#reservarModal').modal('show');
     }
@@ -178,7 +203,6 @@ if (isset($_GET['id'])) {
                 if (data.success) {
                     alert('Reserva realizada con éxito.');
                     $('#reservarModal').modal('hide'); // Cerrar el modal
-                    // Aquí puedes actualizar el estado de los turnos o realizar otras acciones
                 } else {
                     alert('Error al realizar la reserva: ' + data.error);
                 }
