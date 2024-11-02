@@ -1,19 +1,28 @@
 <?php
-// Incluir archivo de conexión a la base de datos
-include '../SCRIPT/conexion.php';
+include 'conexion.php';
 
-// Obtener el turnoId desde la solicitud
-$data = json_decode(file_get_contents('php://input'), true);
-$turnoId = $data['turnoId'];
+// Obtiene los datos enviados desde el formulario
+$data = json_decode(file_get_contents("php://input"), true);
 
-// Preparar y ejecutar la consulta para eliminar la reserva
-$query = "DELETE FROM reservas WHERE id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("s", $turnoId);
-if ($stmt->execute()) {
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'error' => 'Error al cancelar la reserva.']);
+// Valida la entrada
+$id = $data['id'] ?? null;
+
+// Verifica que el id esté presente
+if (!$id) {
+    echo json_encode(["status" => "error", "message" => "Faltan datos requeridos."]);
+    exit;
 }
+
+// Elimina la reserva
+$sqlDelete = "DELETE FROM reservas WHERE id = ?";
+$stmt = $conn->prepare($sqlDelete);
+$stmt->bind_param("s", $id);
+
+if ($stmt->execute()) {
+    echo json_encode(["status" => "success"]);
+} else {
+    echo json_encode(["status" => "error", "message" => "No se pudo cancelar la reserva: " . $stmt->error]);
+}
+
 $stmt->close();
 $conn->close();

@@ -1,10 +1,13 @@
 <?php
+// Include database connection
 include 'conexion.php';
 
 $actividad_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $capacidad_turno = isset($_GET['capacidad_turno']) ? intval($_GET['capacidad_turno']) : 0;
+$fecha = isset($_GET['fecha']) ? $_GET['fecha'] : ''; // Obtener la fecha
 
-if ($actividad_id > 0) {
+if ($actividad_id > 0 && !empty($fecha)) {
+    // Obtiene todos los horarios
     $sql = "SELECT id, horario FROM turnos_horarios WHERE actividad_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $actividad_id);
@@ -31,15 +34,28 @@ if ($actividad_id > 0) {
             echo '<tbody>';
             for ($i = 1; $i <= $capacidad_turno; $i++) {
                 $turnoIdUnico = $horarioId . '-' . $i;
+
+                // Comprobar si ya existe una reserva para este turno y fecha
+                $sqlReserva = "SELECT * FROM reservas WHERE id = ? AND fecha = ?";
+                $stmtReserva = $conn->prepare($sqlReserva);
+                $stmtReserva->bind_param("ss", $turnoIdUnico, $fecha); // Cambia a "ss" ya que 'id' es un string en el formato "51-2"
+                $stmtReserva->execute();
+                $resultReserva = $stmtReserva->get_result();
+
                 echo '<tr id="turno-' . $turnoIdUnico . '">';
                 echo '<td>' . $i . '/' . $capacidad_turno . '</td>';
                 echo '<td>' . htmlspecialchars($turnoIdUnico) . '</td>';
-                echo '<td><button class="btn btn-primary btn-sm" onclick="reservarTurno(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Reservar</button></td>';
+
+                if ($resultReserva->num_rows > 0) {
+                    // Si hay una reserva, mostrar el botón de cancelar
+                    echo '<td><button class="btn btn-danger btn-sm" onclick="cancelarReserva(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Cancelar Reserva</button></td>';
+                } else {
+                    // Si no hay reserva, mostrar el botón de reservar
+                    echo '<td><button class="btn btn-primary btn-sm" onclick="reservarTurno(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Reservar</button></td>';
+                }
                 echo '</tr>';
             }
             echo '</tbody></table>';
-
-
             echo '</div></div></div>';
         }
         echo '</div>';
@@ -48,5 +64,5 @@ if ($actividad_id > 0) {
     }
     $stmt->close();
 } else {
-    echo '<div class="alert alert-danger">ID de actividad no válido.</div>';
+    echo '<div class="alert alert-danger">ID de actividad no válido o fecha no proporcionada.</div>';
 }

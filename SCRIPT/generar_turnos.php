@@ -171,6 +171,7 @@ if ($actividad_id > 0) {
         e.preventDefault();
 
         const fechaSeleccionada = document.getElementById('fecha').value;
+        console.log("Fecha seleccionada:", fechaSeleccionada); // Verifica la fecha seleccionada
         const fecha = new Date(fechaSeleccionada + "T00:00:00Z");
 
         const dia = fecha.getUTCDay();
@@ -192,7 +193,7 @@ if ($actividad_id > 0) {
             resultDiv.innerHTML = '<div class="alert alert-success">¡Muy bien!</div>';
 
             // Hacer una solicitud AJAX a PHP para obtener los horarios de la actividad
-            fetch(`../SCRIPT/obtener_turnos.php?id=<?php echo $actividad_id; ?>&capacidad_turno=<?php echo $capacidad_turno; ?>`)
+            fetch(`../SCRIPT/obtener_turnos.php?id=<?php echo $actividad_id; ?>&capacidad_turno=<?php echo $capacidad_turno; ?>&fecha=${fechaSeleccionada}`)
                 .then(response => response.text())
                 .then(data => {
                     resultDiv.innerHTML += data; // Agregar la lista de horarios al resultado
@@ -202,6 +203,33 @@ if ($actividad_id > 0) {
             resultDiv.innerHTML = '<div class="alert alert-danger">Los días no son válidos.</div>';
         }
     });
+
+
+    function cancelarReserva(turnoId, horario) {
+        // Aquí puedes implementar la lógica para cancelar la reserva
+        if (confirm("¿Está seguro de que desea cancelar esta reserva?")) {
+            fetch('../SCRIPT/cancelar_reserva.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: turnoId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Reserva cancelada con éxito.');
+                        // Actualiza la UI o recarga los horarios
+                        location.reload(); // O puedes actualizar solo la parte afectada
+                    } else {
+                        alert('Error al cancelar la reserva: ' + data.message);
+                    }
+                })
+                .catch(error => console.error('Error al cancelar la reserva:', error));
+        }
+    }
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
