@@ -170,9 +170,16 @@ if ($actividad_id > 0) {
         e.preventDefault();
 
         const fechaSeleccionada = document.getElementById('fecha').value;
-        console.log("Fecha seleccionada:", fechaSeleccionada); // Verifica la fecha seleccionada
-        const fecha = new Date(fechaSeleccionada + "T00:00:00Z");
+        const fechaActual = new Date().toISOString().split("T")[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
 
+        // Comprobar si la fecha seleccionada es anterior o igual a la fecha actual
+        if (fechaSeleccionada <= fechaActual) {
+            document.getElementById('result').innerHTML = '<div class="alert alert-danger">Sólo se puede reservar para días posteriores a la fecha.</div>';
+            return; // Detiene el proceso si la fecha no es válida
+        }
+
+        // Continúa con el resto de las validaciones de días de la semana
+        const fecha = new Date(fechaSeleccionada + "T00:00:00Z");
         const dia = fecha.getUTCDay();
         const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
         const diaInicio = '<?php echo $dia_inicio; ?>';
@@ -199,9 +206,10 @@ if ($actividad_id > 0) {
                 })
                 .catch(error => console.error('Error al obtener los turnos:', error));
         } else {
-            resultDiv.innerHTML = '<div class="alert alert-danger">Los días no son válidos.</div>';
+            resultDiv.innerHTML = '<div class="alert alert-danger">La actividad no tiene turnos asignados para estos días.</div>';
         }
     });
+
 
 
     function cancelarReserva(turnoId, horario) {

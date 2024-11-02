@@ -29,14 +29,17 @@ if ($actividad_id > 0 && !empty($fecha)) {
             echo '<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' . $horarioId . '" aria-expanded="true" aria-controls="collapse' . $horarioId . '">';
             echo 'Horario: ' . htmlspecialchars($horario);
             echo '</button></h2>';
-            echo '<div id="collapse' . $horarioId . '" class="accordion-collapse collapse" aria-labelledby="heading' . $horarioId . '" data-bs-parent="#horariosAccordion">';
+            echo '<div id="collapse' . $horarioId . '" class="accordion-collapse collapse show" aria-labelledby="heading' . $horarioId . '" data-bs-parent="#horariosAccordion">';
             echo '<div class="accordion-body">';
 
             // Generar filas de reservas
             echo '<table class="table">';
-            echo '<thead><tr><th>Número de Turno</th><th>ID</th>';
+            echo '<thead><tr>';
+            echo '<th style="width: 25%;">Número de Turno</th>';
+            echo '<th style="width: 25%;">Turno</th>';
+            echo '<th style="width: 25%;">DNI de Huésped</th>';
             if (!$isVisualizador) {
-                echo '<th>Acciones</th>';
+                echo '<th style="width: 25%;">Acciones</th>';
             }
             echo '</tr></thead>';
             echo '<tbody>';
@@ -44,23 +47,26 @@ if ($actividad_id > 0 && !empty($fecha)) {
                 $turnoIdUnico = $horarioId . '-' . $i;
 
                 // Comprobar si ya existe una reserva para este turno y fecha
-                $sqlReserva = "SELECT * FROM reservas WHERE id = ? AND fecha = ?";
+                $sqlReserva = "SELECT huesped_dni FROM reservas WHERE id = ? AND fecha = ?";
                 $stmtReserva = $conn->prepare($sqlReserva);
                 $stmtReserva->bind_param("ss", $turnoIdUnico, $fecha);
                 $stmtReserva->execute();
                 $resultReserva = $stmtReserva->get_result();
 
-                echo '<tr id="turno-' . $turnoIdUnico . '">';
-                echo '<td>' . $i . '/' . $capacidad_turno . '</td>';
-                echo '<td>' . htmlspecialchars($turnoIdUnico) . '</td>';
+                $huespedDNI = ($resultReserva->num_rows > 0) ? $resultReserva->fetch_assoc()['huesped_dni'] : '-----';
+
+                echo '<tr style="width: 25%;" id="turno-' . $turnoIdUnico . '">';
+                echo '<td style="width: 25%;">' . $i . '/' . $capacidad_turno . '</td>';
+                echo '<td style="width: 25%;">' . htmlspecialchars($turnoIdUnico) . '</td>';
+                echo '<td style="width: 25%;">' . htmlspecialchars($huespedDNI) . '</td>';
 
                 if (!$isVisualizador) {
-                    if ($resultReserva->num_rows > 0) {
+                    if ($huespedDNI !== '-----') {
                         // Si hay una reserva, mostrar el botón de cancelar
-                        echo '<td><button class="btn btn-danger btn-sm" onclick="cancelarReserva(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Cancelar Reserva</button></td>';
+                        echo '<td style="width: 25%;"><button class="btn btn-danger btn-sm" onclick="cancelarReserva(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Cancelar Reserva</button></td>';
                     } else {
                         // Si no hay reserva, mostrar el botón de reservar
-                        echo '<td><button class="btn btn-primary btn-sm" onclick="reservarTurno(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Reservar</button></td>';
+                        echo '<td style="width: 25%;"><button class="btn btn-primary btn-sm" onclick="reservarTurno(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Reservar</button></td>';
                     }
                 }
                 echo '</tr>';
@@ -77,4 +83,5 @@ if ($actividad_id > 0 && !empty($fecha)) {
     echo '<div class="alert alert-danger">ID de actividad no válido o fecha no proporcionada.</div>';
 }
 ?>
+
 
