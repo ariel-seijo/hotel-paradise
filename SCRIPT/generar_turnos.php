@@ -120,6 +120,7 @@ if ($actividad_id > 0) {
                     alert('Reserva realizada con éxito.');
                     // Cierra el modal
                     $('#reservarModal').modal('hide');
+                    location.reload();
                 } else {
                     alert('Error al realizar la reserva: ' + data.message);
                 }

@@ -42,6 +42,9 @@ if (isset($_GET['id'])) {
 <body>
     <?php include 'navbar.php'; ?>
     <div class="container contenedor-principal">
+        <div class="container mt-3">
+            <button onclick="window.history.back();" class="btn btn-secondary">Volver</button>
+        </div>
         <div class="row">
             <div class="col-3 h-100vh seccion-panel gap-2">
                 <h1 class="display-6 text-center">ACTIVIDAD</h1>
@@ -78,8 +81,8 @@ if (isset($_GET['id'])) {
             </div>
             <div class="col-9 seccion-elegida">
                 <h2 class="display-6 text-center">AGENDA DE TURNOS</h1>
-                
-                <?php include '../SCRIPT/generar_turnos.php' ?>
+
+                    <?php include '../SCRIPT/generar_turnos.php' ?>
             </div>
         </div>
     </div>
