@@ -19,8 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($resultado->num_rows > 0) {
             $usuario = $resultado->fetch_assoc();
-            // Verificar la contraseña
-            if ($contraseña === $usuario['contraseña']) {
+            // Verificar la contraseña utilizando password_verify
+            if (password_verify($contraseña, $usuario['contraseña'])) {
                 // Contraseña correcta, iniciar sesión
                 $_SESSION['usuario'] = $usuario['email'];
                 $_SESSION['isAdmin'] = $usuario['isAdmin'];
@@ -46,4 +46,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Cerrar conexión
 $conn->close();
-

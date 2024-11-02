@@ -71,8 +71,8 @@ if (isset($_GET['id'])) {
                         <?php endif; ?>
 
                         <p><strong>Descripción:</strong> <?php echo htmlspecialchars($actividad['descripcion']); ?></p>
-                        <p><strong>Horario:</strong> <?php echo htmlspecialchars($actividad['horario_inicio']) . " - " . htmlspecialchars($actividad['horario_cierre']); ?></p>
-                        <p><strong>Días:</strong> <?php echo htmlspecialchars($actividad['dia_inicio']) . " - " . htmlspecialchars($actividad['dia_fin']); ?></p>
+                        <p><strong>Horario:</strong> <?php echo htmlspecialchars($actividad['horario_inicio']) . " a " . htmlspecialchars($actividad['horario_cierre']); ?></p>
+                        <p><strong>Días:</strong> <?php echo htmlspecialchars($actividad['dia_inicio']) . " a " . htmlspecialchars($actividad['dia_fin']); ?></p>
                         <p><strong>Formato:</strong> <?php echo htmlspecialchars($actividad['formato']); ?></p>
                         <p><strong>Capacidad por turno:</strong> <?php echo htmlspecialchars($actividad['capacidad_turno']); ?> personas</p>
                         <p><strong>Duración del turno:</strong> <?php echo htmlspecialchars($actividad['duracion']); ?> minutos</p>

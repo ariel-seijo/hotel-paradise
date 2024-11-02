@@ -123,6 +123,7 @@ $result = $stmt->get_result();
             <div class="modal-body">
                 <form id="formAgregarHorario">
                     <input type="hidden" id="actividadId">
+                    <h4>Horario debe estar entre A y B:</h4>
                     <div class="form-group">
                         <label for="nuevoHorario">Horario</label>
                         <input type="time" id="nuevoHorario" class="form-control" required>
@@ -207,14 +208,14 @@ $result = $stmt->get_result();
                             </div>
                             <div class="form-group">
                                 <label for="formato">Formato</label>
-                                <select class="form-control" id="formato" name="formato" required>
+                                <select class="form-control" id="formato" name="formato" required onchange="actualizarCapacidad();">
                                     <option value="individual">Individual</option>
                                     <option value="grupal">Grupal</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="capacidad_turno">Capacidad por Turno</label>
-                                <input type="number" class="form-control" id="capacidad_turno" name="capacidad_turno" min="1" value="1" required>
+                                <input type="number" class="form-control" id="capacidad_turno" name="capacidad_turno" min="1" value="1" disabled required>
                             </div>
                             <div class="form-group">
                                 <label for="duracion">Duración (en minutos)</label>
@@ -231,6 +232,19 @@ $result = $stmt->get_result();
         </div>
     </div>
 </div>
+
+<script>
+    function actualizarCapacidad() {
+        var formato = document.getElementById("formato").value;
+        var capacidadTurno = document.getElementById("capacidad_turno");
+        if (formato == "individual") {
+            capacidadTurno.value = 1; // Establecer capacidad a 1
+            capacidadTurno.disabled = true; // Deshabilitar el campo
+        } else {
+            capacidadTurno.disabled = false; // Habilitar el campo para grupos
+        }
+    }
+</script>
 
 <script>
     function confirmarAgregarActividad() {
@@ -278,8 +292,12 @@ $result = $stmt->get_result();
                                 <input type="text" class="form-control" id="editar_nombre" name="nombre" required>
                             </div>
                             <div class="form-group">
-                                <label for="editar_imagen">Imagen</label>
-                                <input type="file" class="form-control-file" id="editar_imagen" name="imagen">
+                                <label for="editar_imagen">Seleccionar Nueva Imagen</label>
+                                <input type="file" class="form-control-file" id="editar_imagen" name="imagen" accept="image/*" onchange="mostrarVistaPrevia(this)">
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_imagen_actual">Imagen seleccionada</label>
+                                <img id="editar_imagen_actual" class="img-preview" src="" alt="Imagen actual" style="max-width: 50%; display: none;">
                             </div>
                             <div class="form-group">
                                 <label for="editar_descripcion">Descripción</label>
@@ -345,6 +363,7 @@ $result = $stmt->get_result();
         </div>
     </div>
 </div>
+
 
 <script>
     function confirmarActualizacion() {
@@ -477,6 +496,9 @@ $result = $stmt->get_result();
                 if (data.success) {
                     horarioInicio = data.horario_inicio;
                     horarioCierre = data.horario_cierre;
+                    // Actualizar el encabezado del modal con el rango de horarios
+                    const encabezadoHorario = document.querySelector('#agregarHorarioModal .modal-body h4');
+                    encabezadoHorario.textContent = `Horario debe estar entre ${horarioInicio} y ${horarioCierre}`;
                 } else {
                     alert(data.error);
                 }
@@ -539,10 +561,24 @@ $result = $stmt->get_result();
                     document.getElementById('editar_dia_inicio').value = data.dia_inicio;
                     document.getElementById('editar_dia_fin').value = data.dia_fin;
 
-                    // Si tienes un campo de imagen, puedes optar por mostrar la imagen actual
-                    // document.getElementById('imagen_actual').src = data.imagen; // Asegúrate de tener una etiqueta de imagen en tu modal
+                    // Cargar y mostrar la imagen actual
+                    const imagenActual = document.getElementById('editar_imagen_actual');
+                    imagenActual.src = data.imagen; // Suponiendo que 'data.imagen' contiene la URL de la imagen
+                    imagenActual.style.display = 'block'; // Mostrar la imagen
                 }
             })
             .catch(error => console.error('Error al cargar los datos de la actividad:', error));
+    }
+
+    // Función para mostrar la vista previa de la nueva imagen
+    function mostrarVistaPrevia(input) {
+        const imagenPreview = document.getElementById('editar_imagen_actual');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagenPreview.src = e.target.result; // Actualizar la vista previa con la nueva imagen
+            }
+            reader.readAsDataURL(input.files[0]); // Leer el archivo como una URL de datos
+        }
     }
 </script>

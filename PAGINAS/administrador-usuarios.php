@@ -59,6 +59,14 @@ $result = $stmt->get_result();
             </div>
             <div class="col-9 seccion-elegida">
                 <h1 class="display-1 text-center">PANEL DE USUARIOS</h1>
+                <?php if (isset($_SESSION['mensaje'])): ?>
+                    <div class="alert alert-success" role="alert">
+                        <?php
+                        echo $_SESSION['mensaje']; // Mostrar el mensaje
+                        unset($_SESSION['mensaje']); // Eliminar el mensaje de la sesión
+                        ?>
+                    </div>
+                <?php endif; ?>
                 <div class="d-flex justify-content-between align-items-center mb-3 px-4">
                     <form method="get" class="form-inline">
                         <input type="text" name="search" placeholder="Buscar por nombre o tipo de usuario" value="<?= $searchQuery ?>" class="form-control mr-2">
@@ -105,7 +113,7 @@ $result = $stmt->get_result();
             <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <form id="addUserForm" action="../SCRIPT/add_user.php" method="post">
+                        <form id="addUserForm" action="../SCRIPT/add_user.php" method="post" onsubmit="return confirmarCreacionUsuario();">
                             <div class="modal-header">
                                 <h5 class="modal-title">Añadir Usuario</h5>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -135,6 +143,12 @@ $result = $stmt->get_result();
                     </div>
                 </div>
             </div>
+            <script>
+                function confirmarCreacionUsuario() {
+                    return confirm("¿Estás seguro de que deseas crear este usuario?");
+                }
+            </script>
+
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
