@@ -24,8 +24,6 @@ if ($actividad_id > 0) {
     exit;
 }
 ?>
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <div class="container mt-5">
     <h2>Buscar Fecha para Actividad ID: <?php echo $actividad_id; ?></h2>
     <form id="searchForm">

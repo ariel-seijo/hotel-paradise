@@ -25,8 +25,8 @@
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-registros.php" role="button">Registro de turnos</a>
             </div>
             <div class="col-9 seccion-elegida">
-                <h1 class="display-1 text-center">PANEL DE ACTIVIDADES</h1>
-                <?php include '../SCRIPT/listar_actividades.php'; ?>
+                <h1 class="display-1 text-center">REGISTROS</h1>
+                <?php include '../SCRIPT/generar_registros.php' ?>
             </div>
         </div>
     </div>

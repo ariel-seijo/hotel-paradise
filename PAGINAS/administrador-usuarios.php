@@ -55,7 +55,7 @@ $result = $stmt->get_result();
                 <h1 class="display-6 text-center">PANEL DE ADMINISTRACIÓN</h1>
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-actividades.php" role="button">Actividades</a>
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-usuarios.php" role="button">Usuarios</a>
-                <a class="btn btn-primary w-100 btnPanel" href="#" role="button">Registro de turnos</a>
+                <a class="btn btn-primary w-100 btnPanel" href="administrador-registros.php" role="button">Registro de turnos</a>
             </div>
             <div class="col-9 seccion-elegida">
                 <h1 class="display-1 text-center">PANEL DE USUARIOS</h1>
