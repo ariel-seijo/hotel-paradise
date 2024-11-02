@@ -1,6 +1,6 @@
 <?php
 // actualizar_actividad.php
-
+session_start(); // Iniciar la sesión
 include 'conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -70,9 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Ejecuta la consulta
     if ($stmt->execute()) {
-        echo "Actividad actualizada exitosamente.";
+        $_SESSION['mensaje'] = "Actividad actualizada con éxito."; // Mensaje de éxito
+        header("Location: ../PAGINAS/administrador-actividades.php");
+        exit(); // Asegurarse de que no se ejecute más código
     } else {
-        echo "Error al actualizar la actividad: " . $stmt->error;
+        $_SESSION['mensaje'] = "Error al actualizar la actividad: " . $stmt->error; // Mensaje de error
+        header("Location: ../PAGINAS/administrador-actividades.php");
+        exit(); // Asegurarse de que no se ejecute más código
     }
 
     // Cierra la conexión

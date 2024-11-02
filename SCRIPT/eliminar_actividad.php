@@ -2,6 +2,7 @@
 // eliminar_actividad.php
 
 include 'conexion.php';
+session_start(); // Iniciar la sesión
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtiene el ID de la actividad a eliminar
@@ -16,9 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Ejecuta la consulta
     if ($stmt->execute()) {
-        echo "Actividad eliminada exitosamente.";
+        $_SESSION['mensaje'] = "Actividad eliminada con éxito."; // Mensaje de éxito
+        header("Location: ../PAGINAS/administrador-actividades.php");
+        exit(); // Asegurarse de que no se ejecute más código
     } else {
-        echo "Error al eliminar la actividad: " . $stmt->error;
+        $_SESSION['mensaje'] = "Error al eliminar la actividad: " . $stmt->error; // Mensaje de error
+        header("Location: ../PAGINAS/administrador-actividades.php");
+        exit(); // Asegurarse de que no se ejecute más código
     }
 
     // Cierra la conexión

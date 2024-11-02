@@ -20,11 +20,17 @@ if (!empty($search)) {
 }
 $stmt->execute();
 $result = $stmt->get_result();
+
 ?>
-
+<?php if (isset($_SESSION['mensaje'])): ?>
+    <div class="alert alert-success" role="alert">
+        <?php
+        echo $_SESSION['mensaje']; // Mostrar el mensaje
+        unset($_SESSION['mensaje']); // Eliminar el mensaje de la sesión
+        ?>
+    </div>
+<?php endif; ?>
 <div class="container mt-5">
-    <h1 class="mb-4">Listado de Actividades</h1>
-
     <div class="d-flex justify-content-between mb-4">
         <!-- Formulario de búsqueda -->
         <form class="form-inline" method="GET" action="">
@@ -59,33 +65,16 @@ $result = $stmt->get_result();
                     <td>
                         <!-- Botón de editar -->
                         <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarActividadModal" data-id="<?php echo $row['id']; ?>" onclick="cargarDatosActividad(this)">Editar</button>
-                        <!-- Suponiendo que estás usando Bootstrap para el modal de confirmación -->
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal<?php echo $row['id']; ?>">
-                            Eliminar
-                        </button>
-                        <!-- Modal de confirmación -->
-                        <div class="modal fade" id="confirmDeleteModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Confirmar eliminación</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>¿Estás seguro de que deseas eliminar esta actividad?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form action="../SCRIPT/eliminar_actividad.php" method="POST">
-                                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Botón de eliminar -->
+                        <form action="../SCRIPT/eliminar_actividad.php" method="POST">
+                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="confirmarEliminar(<?php echo $row['id']; ?>)">Eliminar</button>
+                        </form>
+                        <script>
+                            function confirmarEliminar(id) {
+                                confirm("¿Estás seguro de que deseas eliminar esta actividad?")
+                            }
+                        </script>
                     <td>
                         <!-- Botones de Agregar y Editar Horarios -->
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#agregarHorarioModal" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
@@ -149,72 +138,89 @@ $result = $stmt->get_result();
 <div class="modal fade" id="agregarActividadModal" tabindex="-1" role="dialog" aria-labelledby="agregarActividadModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            <style>
+                .modal-content {
+                    min-width: 800px;
+                }
+
+                .img-preview {
+                    max-width: 50%;
+                    margin-top: 10px;
+                }
+            </style>
             <div class="modal-header">
                 <h5 class="modal-title" id="agregarActividadModalLabel">Agregar Nueva Actividad</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formAgregarActividad" method="POST" enctype="multipart/form-data" action="../SCRIPT/guardar_actividad.php">
+            <form id="formAgregarActividad" method="POST" enctype="multipart/form-data" action="../SCRIPT/guardar_actividad.php" onsubmit="return confirmarAgregarActividad();">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="descripcion">Descripción</label>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="horario_inicio">Horario de Inicio</label>
-                        <input type="time" class="form-control" id="horario_inicio" name="horario_inicio" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="horario_cierre">Horario de Cierre</label>
-                        <input type="time" class="form-control" id="horario_cierre" name="horario_cierre" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="formato">Formato</label>
-                        <select class="form-control" id="formato" name="formato" required>
-                            <option value="individual">Individual</option>
-                            <option value="grupal">Grupal</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="capacidad_turno">Capacidad por Turno</label>
-                        <input type="number" class="form-control" id="capacidad_turno" name="capacidad_turno" min="1" value="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="duracion">Duración (en minutos)</label>
-                        <input type="number" class="form-control" id="duracion" name="duracion" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="imagen">Imagen</label>
-                        <input type="file" class="form-control-file" id="imagen" name="imagen" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="dia_inicio">Día de Inicio</label>
-                        <select class="form-control" id="dia_inicio" name="dia_inicio" required>
-                            <option value="lunes">Lunes</option>
-                            <option value="martes">Martes</option>
-                            <option value="miércoles">Miércoles</option>
-                            <option value="jueves">Jueves</option>
-                            <option value="viernes">Viernes</option>
-                            <option value="sábado">Sábado</option>
-                            <option value="domingo">Domingo</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="dia_fin">Día de Fin</label>
-                        <select class="form-control" id="dia_fin" name="dia_fin" required>
-                            <option value="lunes">Lunes</option>
-                            <option value="martes">Martes</option>
-                            <option value="miércoles">Miércoles</option>
-                            <option value="jueves">Jueves</option>
-                            <option value="viernes">Viernes</option>
-                            <option value="sábado">Sábado</option>
-                            <option value="domingo">Domingo</option>
-                        </select>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="imagen">Imagen</label>
+                                <input type="file" class="form-control-file" id="imagen" name="imagen" required accept="image/*">
+                                <img id="imgPreview" class="img-preview" src="" alt="Previsualización" style="display:none;">
+                            </div>
+                            <div class="form-group">
+                                <label for="descripcion">Descripción</label>
+                                <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="dia_inicio">Día de Inicio</label>
+                                <select class="form-control" id="dia_inicio" name="dia_inicio" required>
+                                    <option value="lunes">Lunes</option>
+                                    <option value="martes">Martes</option>
+                                    <option value="miércoles">Miércoles</option>
+                                    <option value="jueves">Jueves</option>
+                                    <option value="viernes">Viernes</option>
+                                    <option value="sábado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dia_fin">Día de Fin</label>
+                                <select class="form-control" id="dia_fin" name="dia_fin" required>
+                                    <option value="lunes">Lunes</option>
+                                    <option value="martes">Martes</option>
+                                    <option value="miércoles">Miércoles</option>
+                                    <option value="jueves">Jueves</option>
+                                    <option value="viernes">Viernes</option>
+                                    <option value="sábado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="horario_inicio">Horario de Inicio</label>
+                                <input type="time" class="form-control" id="horario_inicio" name="horario_inicio" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="horario_cierre">Horario de Cierre</label>
+                                <input type="time" class="form-control" id="horario_cierre" name="horario_cierre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="formato">Formato</label>
+                                <select class="form-control" id="formato" name="formato" required>
+                                    <option value="individual">Individual</option>
+                                    <option value="grupal">Grupal</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="capacidad_turno">Capacidad por Turno</label>
+                                <input type="number" class="form-control" id="capacidad_turno" name="capacidad_turno" min="1" value="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="duracion">Duración (en minutos)</label>
+                                <input type="number" class="form-control" id="duracion" name="duracion" required>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -226,6 +232,32 @@ $result = $stmt->get_result();
     </div>
 </div>
 
+<script>
+    function confirmarAgregarActividad() {
+        return confirm("¿Estás seguro de que deseas agregar esta actividad?");
+    }
+</script>
+
+<script>
+    document.getElementById('imagen').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const imgPreview = document.getElementById('imgPreview');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                imgPreview.style.display = 'block'; // Mostrar la imagen
+            }
+            reader.readAsDataURL(file);
+        } else {
+            imgPreview.src = '';
+            imgPreview.style.display = 'none'; // Ocultar si no hay archivo
+        }
+    });
+</script>
+
+
 <!-- Modal para editar actividad -->
 <div class="modal fade" id="editarActividadModal" tabindex="-1" role="dialog" aria-labelledby="editarActividadModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -236,68 +268,73 @@ $result = $stmt->get_result();
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formEditarActividad" method="POST" enctype="multipart/form-data" action="../SCRIPT/actualizar_actividad.php">
+            <form id="formEditarActividad" method="POST" enctype="multipart/form-data" action="../SCRIPT/actualizar_actividad.php" onsubmit="return confirmarActualizacion();">
                 <div class="modal-body">
-                    <!-- Agregar un campo oculto para el ID -->
-                    <input type="hidden" id="editar_id" name="id">
-                    <div class="form-group">
-                        <label for="editar_nombre">Nombre</label>
-                        <input type="text" class="form-control" id="editar_nombre" name="nombre" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_descripcion">Descripción</label>
-                        <textarea class="form-control" id="editar_descripcion" name="descripcion" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_horario_inicio">Horario de Inicio</label>
-                        <input type="time" class="form-control" id="editar_horario_inicio" name="horario_inicio" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_horario_cierre">Horario de Cierre</label>
-                        <input type="time" class="form-control" id="editar_horario_cierre" name="horario_cierre" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_formato">Formato</label>
-                        <select class="form-control" id="editar_formato" name="formato" required>
-                            <option value="individual">Individual</option>
-                            <option value="grupal">Grupal</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_capacidad_turno">Capacidad por Turno</label>
-                        <input type="number" class="form-control" id="editar_capacidad_turno" name="capacidad_turno" min="1" value="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_duracion">Duración (en minutos)</label>
-                        <input type="number" class="form-control" id="editar_duracion" name="duracion" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_imagen">Imagen</label>
-                        <input type="file" class="form-control-file" id="editar_imagen" name="imagen">
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_dia_inicio">Día de Inicio</label>
-                        <select class="form-control" id="editar_dia_inicio" name="dia_inicio" required>
-                            <option value="lunes">Lunes</option>
-                            <option value="martes">Martes</option>
-                            <option value="miércoles">Miércoles</option>
-                            <option value="jueves">Jueves</option>
-                            <option value="viernes">Viernes</option>
-                            <option value="sábado">Sábado</option>
-                            <option value="domingo">Domingo</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editar_dia_fin">Día de Fin</label>
-                        <select class="form-control" id="editar_dia_fin" name="dia_fin" required>
-                            <option value="lunes">Lunes</option>
-                            <option value="martes">Martes</option>
-                            <option value="miércoles">Miércoles</option>
-                            <option value="jueves">Jueves</option>
-                            <option value="viernes">Viernes</option>
-                            <option value="sábado">Sábado</option>
-                            <option value="domingo">Domingo</option>
-                        </select>
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="hidden" id="editar_id" name="id">
+                            <div class="form-group">
+                                <label for="editar_nombre">Nombre</label>
+                                <input type="text" class="form-control" id="editar_nombre" name="nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_imagen">Imagen</label>
+                                <input type="file" class="form-control-file" id="editar_imagen" name="imagen">
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_descripcion">Descripción</label>
+                                <textarea class="form-control" id="editar_descripcion" name="descripcion" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="editar_dia_inicio">Día de Inicio</label>
+                                <select class="form-control" id="editar_dia_inicio" name="dia_inicio" required>
+                                    <option value="lunes">Lunes</option>
+                                    <option value="martes">Martes</option>
+                                    <option value="miércoles">Miércoles</option>
+                                    <option value="jueves">Jueves</option>
+                                    <option value="viernes">Viernes</option>
+                                    <option value="sábado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_dia_fin">Día de Fin</label>
+                                <select class="form-control" id="editar_dia_fin" name="dia_fin" required>
+                                    <option value="lunes">Lunes</option>
+                                    <option value="martes">Martes</option>
+                                    <option value="miércoles">Miércoles</option>
+                                    <option value="jueves">Jueves</option>
+                                    <option value="viernes">Viernes</option>
+                                    <option value="sábado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_horario_inicio">Horario de Inicio</label>
+                                <input type="time" class="form-control" id="editar_horario_inicio" name="horario_inicio" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_horario_cierre">Horario de Cierre</label>
+                                <input type="time" class="form-control" id="editar_horario_cierre" name="horario_cierre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_formato">Formato</label>
+                                <select class="form-control" id="editar_formato" name="formato" required>
+                                    <option value="individual">Individual</option>
+                                    <option value="grupal">Grupal</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_capacidad_turno">Capacidad por Turno</label>
+                                <input type="number" class="form-control" id="editar_capacidad_turno" name="capacidad_turno" min="1" value="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editar_duracion">Duración (en minutos)</label>
+                                <input type="number" class="form-control" id="editar_duracion" name="duracion" required>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -309,6 +346,11 @@ $result = $stmt->get_result();
     </div>
 </div>
 
+<script>
+    function confirmarActualizacion() {
+        return confirm("¿Estás seguro de que deseas actualizar esta actividad?");
+    }
+</script>
 <script>
     let horarioInicio, horarioCierre;
 

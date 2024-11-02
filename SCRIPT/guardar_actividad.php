@@ -1,6 +1,7 @@
 <?php
 // guardar_actividad.php
 
+session_start(); // Iniciar la sesión
 include 'conexion.php';
 
 // Manejo de la carga de imagen
@@ -28,18 +29,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sssssissss", $nombre, $descripcion, $horario_inicio, $horario_cierre, $formato, $capacidad_turno, $duracion, $imagen_path, $dia_inicio, $dia_fin);
         
         if ($stmt->execute()) {
-            echo "Actividad guardada exitosamente.";
+            $_SESSION['mensaje'] = "Actividad guardada exitosamente."; // Mensaje de éxito
+            header("Location: ../PAGINAS/administrador-actividades.php");
+            exit(); // Asegurarse de que no se ejecute más código
         } else {
-            echo "Error al guardar la actividad: " . $stmt->error;
+            $_SESSION['mensaje'] = "Error al guardar la actividad: " . $stmt->error; // Mensaje de error
+            header("Location: ../PAGINAS/administrador-actividades.php");
+            exit(); // Asegurarse de que no se ejecute más código
         }
         
         // Cierra la conexión
         $stmt->close();
     } else {
-        echo "Error al subir la imagen.";
+        $_SESSION['mensaje'] = "Error al subir la imagen."; // Mensaje de error al subir la imagen
+        header("Location: ../PAGINAS/administrador-actividades.php");
+        exit(); // Asegurarse de que no se ejecute más código
     }
 }
 
 $conn->close();
 ?>
+
 
