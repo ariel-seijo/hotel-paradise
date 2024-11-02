@@ -78,6 +78,7 @@ if (isset($_GET['id'])) {
             </div>
             <div class="col-9 seccion-elegida">
                 <h2 class="display-6 text-center">AGENDA DE TURNOS</h1>
+                
                 <?php include '../SCRIPT/generar_turnos.php' ?>
             </div>
         </div>
