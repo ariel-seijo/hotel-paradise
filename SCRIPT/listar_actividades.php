@@ -66,15 +66,20 @@ $result = $stmt->get_result();
                         <!-- Botón de editar -->
                         <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarActividadModal" data-id="<?php echo $row['id']; ?>" onclick="cargarDatosActividad(this)">Editar</button>
                         <!-- Botón de eliminar -->
-                        <form action="../SCRIPT/eliminar_actividad.php" method="POST">
+                        <form id="eliminarActividadForm<?php echo $row['id']; ?>" action="../SCRIPT/eliminar_actividad.php" method="POST">
                             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="confirmarEliminar(<?php echo $row['id']; ?>)">Eliminar</button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmarEliminar(<?php echo $row['id']; ?>)">Eliminar</button>
                         </form>
+
                         <script>
                             function confirmarEliminar(id) {
-                                confirm("¿Estás seguro de que deseas eliminar esta actividad?")
+                                if (confirm("¿Estás seguro de que deseas eliminar esta actividad?")) {
+                                    document.getElementById("eliminarActividadForm" + id).submit();
+                                }
                             }
                         </script>
+
+
                     <td>
                         <!-- Botones de Agregar y Editar Horarios -->
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#agregarHorarioModal" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
@@ -215,7 +220,7 @@ $result = $stmt->get_result();
                             </div>
                             <div class="form-group">
                                 <label for="capacidad_turno">Capacidad por Turno</label>
-                                <input type="number" class="form-control" id="capacidad_turno" name="capacidad_turno" min="1" value="1" disabled required>
+                                <input type="number" class="form-control" id="capacidad_turno" name="capacidad_turno" min="1" value="1" readonly required>
                             </div>
                             <div class="form-group">
                                 <label for="duracion">Duración (en minutos)</label>
@@ -239,9 +244,9 @@ $result = $stmt->get_result();
         var capacidadTurno = document.getElementById("capacidad_turno");
         if (formato == "individual") {
             capacidadTurno.value = 1; // Establecer capacidad a 1
-            capacidadTurno.disabled = true; // Deshabilitar el campo
+            capacidadTurno.readOnly = true; // Deshabilitar el campo
         } else {
-            capacidadTurno.disabled = false; // Habilitar el campo para grupos
+            capacidadTurno.readOnly = false; // Habilitar el campo para grupos
         }
     }
 </script>

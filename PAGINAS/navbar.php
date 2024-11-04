@@ -23,7 +23,7 @@ if (isset($_SESSION['isAdmin'])) {
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active fs-4" aria-current="page" href="#"><?php echo $rol; ?></a>
+          <a class="nav-link active fs-4" aria-current="page" href="#">Usuario <?php echo $rol; ?></a>
         </li>
         <li class="nav-item">
           <a class="btn btn-primary px-5 fs-4" type="button" aria-current="page" href="../SCRIPT/logout.php">Salir</a>

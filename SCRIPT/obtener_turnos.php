@@ -35,11 +35,12 @@ if ($actividad_id > 0 && !empty($fecha)) {
             // Generar filas de reservas
             echo '<table class="table">';
             echo '<thead><tr>';
-            echo '<th style="width: 25%;">Número de Turno</th>';
-            echo '<th style="width: 25%;">Turno</th>';
-            echo '<th style="width: 25%;">DNI de Huésped</th>';
+            echo '<th style="width: 20%;">Número de Turno</th>';
+            echo '<th style="width: 20%;">Turno</th>';
+            echo '<th style="width: 20%;">DNI de Huésped</th>';
+            echo '<th style="width: 20%;">Nombre de Huésped</th>';
             if (!$isVisualizador) {
-                echo '<th style="width: 25%;">Acciones</th>';
+                echo '<th style="width: 20%;">Acciones</th>';
             }
             echo '</tr></thead>';
             echo '<tbody>';
@@ -47,26 +48,37 @@ if ($actividad_id > 0 && !empty($fecha)) {
                 $turnoIdUnico = $horarioId . '-' . $i;
 
                 // Comprobar si ya existe una reserva para este turno y fecha
-                $sqlReserva = "SELECT huesped_dni FROM reservas WHERE id = ? AND fecha = ?";
+                $sqlReserva = "SELECT r.huesped_dni, h.huesped_nombre 
+                               FROM reservas r
+                               LEFT JOIN huespedes h ON r.huesped_dni = h.huesped_dni 
+                               WHERE r.id = ? AND r.fecha = ?";
                 $stmtReserva = $conn->prepare($sqlReserva);
                 $stmtReserva->bind_param("ss", $turnoIdUnico, $fecha);
                 $stmtReserva->execute();
                 $resultReserva = $stmtReserva->get_result();
 
-                $huespedDNI = ($resultReserva->num_rows > 0) ? $resultReserva->fetch_assoc()['huesped_dni'] : '-----';
+                if ($resultReserva->num_rows > 0) {
+                    $reserva = $resultReserva->fetch_assoc();
+                    $huespedDNI = $reserva['huesped_dni'];
+                    $huespedNombre = $reserva['huesped_nombre'];
+                } else {
+                    $huespedDNI = '-----';
+                    $huespedNombre = '-----';
+                }
 
-                echo '<tr style="width: 25%;" id="turno-' . $turnoIdUnico . '">';
-                echo '<td style="width: 25%;">' . $i . '/' . $capacidad_turno . '</td>';
-                echo '<td style="width: 25%;">' . htmlspecialchars($turnoIdUnico) . '</td>';
-                echo '<td style="width: 25%;">' . htmlspecialchars($huespedDNI) . '</td>';
+                echo '<tr style="width: 20%;" id="turno-' . $turnoIdUnico . '">';
+                echo '<td style="width: 20%;">' . $i . '/' . $capacidad_turno . '</td>';
+                echo '<td style="width: 20%;">' . htmlspecialchars($turnoIdUnico) . '</td>';
+                echo '<td style="width: 20%;">' . htmlspecialchars($huespedDNI) . '</td>';
+                echo '<td style="width: 20%;">' . htmlspecialchars($huespedNombre) . '</td>';
 
                 if (!$isVisualizador) {
                     if ($huespedDNI !== '-----') {
                         // Si hay una reserva, mostrar el botón de cancelar
-                        echo '<td style="width: 25%;"><button class="btn btn-danger btn-sm" onclick="cancelarReserva(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Cancelar Reserva</button></td>';
+                        echo '<td style="width: 20%;"><button class="btn btn-danger btn-sm" onclick="cancelarReserva(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Cancelar Reserva</button></td>';
                     } else {
                         // Si no hay reserva, mostrar el botón de reservar
-                        echo '<td style="width: 25%;"><button class="btn btn-primary btn-sm" onclick="reservarTurno(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Reservar</button></td>';
+                        echo '<td style="width: 20%;"><button class="btn btn-primary btn-sm" onclick="reservarTurno(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Reservar</button></td>';
                     }
                 }
                 echo '</tr>';
@@ -83,5 +95,3 @@ if ($actividad_id > 0 && !empty($fecha)) {
     echo '<div class="alert alert-danger">ID de actividad no válido o fecha no proporcionada.</div>';
 }
 ?>
-
-

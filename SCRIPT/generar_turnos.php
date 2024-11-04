@@ -25,7 +25,6 @@ if ($actividad_id > 0) {
 }
 ?>
 <div class="container mt-5">
-    <h2>Buscar Fecha para Actividad ID: <?php echo $actividad_id; ?></h2>
     <form id="searchForm">
         <div class="form-group">
             <label for="fecha">Seleccione una fecha:</label>
@@ -173,8 +172,8 @@ if ($actividad_id > 0) {
         const fechaActual = new Date().toISOString().split("T")[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
 
         // Comprobar si la fecha seleccionada es anterior o igual a la fecha actual
-        if (fechaSeleccionada <= fechaActual) {
-            document.getElementById('result').innerHTML = '<div class="alert alert-danger">Sólo se puede reservar para días posteriores a la fecha.</div>';
+        if (fechaSeleccionada < fechaActual) {
+            document.getElementById('result').innerHTML = '<div class="alert alert-danger">No se puede reservar turnos en días anteriores a la fecha.</div>';
             return; // Detiene el proceso si la fecha no es válida
         }
 
@@ -196,13 +195,11 @@ if ($actividad_id > 0) {
 
         const resultDiv = document.getElementById('result');
         if (esDiaValido) {
-            resultDiv.innerHTML = '<div class="alert alert-success">¡Muy bien!</div>';
-
             // Hacer una solicitud AJAX a PHP para obtener los horarios de la actividad
             fetch(`../SCRIPT/obtener_turnos.php?id=<?php echo $actividad_id; ?>&capacidad_turno=<?php echo $capacidad_turno; ?>&fecha=${fechaSeleccionada}`)
                 .then(response => response.text())
                 .then(data => {
-                    resultDiv.innerHTML += data; // Agregar la lista de horarios al resultado
+                    resultDiv.innerHTML = data; // Agregar la lista de horarios al resultado
                 })
                 .catch(error => console.error('Error al obtener los turnos:', error));
         } else {
@@ -237,6 +234,12 @@ if ($actividad_id > 0) {
                 .catch(error => console.error('Error al cancelar la reserva:', error));
         }
     }
+
+    window.onload = function() {
+        const fechaInput = document.getElementById('fecha');
+        const today = new Date().toISOString().split("T")[0];
+        fechaInput.value = today;
+    };
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
