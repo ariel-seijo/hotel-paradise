@@ -26,7 +26,15 @@
         body, .col-3, .seccion-elegida{
             background-color:#fae5da;
         }
-
+        .btnPanel{
+                background-color:#4bbbf2;
+                transition:.5s;
+            }
+            .btnPanel:hover{
+                background-color: #3aa3d4;
+                color:black;
+                transition:.5s;
+            }
 
 
     </style>

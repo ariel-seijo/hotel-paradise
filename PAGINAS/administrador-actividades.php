@@ -48,9 +48,7 @@
                 color:black;
                 transition:.5s;
             }
-            .display-6{
-               
-            }
+            
 
 
     </style>

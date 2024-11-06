@@ -13,7 +13,7 @@
     <?php include 'navbar.php'; ?>
 
     <div class="container contenedor-principal">
-        <h1 class="display-1 text-center"><b>PANEL<b> DE ACTIVIDADES</h1>
+        <h1 class="display-1 text-center"><b>Panel<b> de Actividades</h1>
         <div class="contenedor-actividades d-flex flex-wrap">
             <?php include '../SCRIPT/generar_actividad.php'; ?>
         </div>

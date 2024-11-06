@@ -37,7 +37,7 @@ if (!empty($error)) {
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Inicio de sesión</h1>
+          <h2 class="modal-title fs-5" id="staticBackdropLabel">Inicio de sesión</h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -96,9 +96,12 @@ if (!empty($error)) {
         
     h1{
       color:white;
-      text-shadow: 2px 2px 47px rgba(0, 0, 0, 0.8);
+      text-shadow: 2px 2px 20px rgba(0, 0, 0, 1);
     }
 
+    .container-fluid {
+        height: 100vh;
+    }
   </style>
  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
