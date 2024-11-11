@@ -13,71 +13,86 @@
     <?php include 'navbar.php'; ?>
 
     <div class="container contenedor-principal">
-        <h1 class="display-1 text-center"><b>Panel<b> de Actividades</h1>
+        <h1 class="display-1 text-center">Panel de Actividades</h1>
         <div class="contenedor-actividades d-flex flex-wrap">
             <?php include '../SCRIPT/generar_actividad.php'; ?>
         </div>
     </div>
 
 
-<style>
-   
-    .display-1{
-        
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;    
-    }
+    <style>
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+            /* Sombra para dar profundidad */
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
 
-    .card {
-        max-width: 250px;
-        /* Tamaño máximo para la tarjeta */
-        height: 250px;
-        /* Altura fija para todas las tarjetas */
-        margin: auto;
-        /* Centrar la tarjeta */
-        background-color:white;
-    }
+        .card:hover {
+            transform: scale(1.02);
+            /* Efecto de escala al hacer hover */
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+            /* Sombra más intensa en hover */
+        }
 
-    .card-img-top {
-        min-height: 170px;
-        /* Altura fija para la imagen */
-        width: 100%;
-        /* Ancho completo */
-        object-fit: cover;
-        /* Mantener proporción y cubrir el área */
-        transition:1s;
-    }
+        .card-img-top {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            height: 200px;
+            object-fit: cover;
+        }
 
-    .card-img-top:hover{
-        min-height: 200px;
-        transition:1s;
-    }
+        .card-body {
+            background-color: #3e99c6;
+            /* Color secundario */
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
 
-    .card-body {
-        color:#4bbbf2;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        /* Centrar el contenido verticalmente */
-        height: 100%;
-        /* Hacer que el cuerpo de la tarjeta ocupe todo el alto disponible */
-    }
-    
-    .contenedor-principal {
+        .card-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
 
-        background-color: #fae5da;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        .card:hover .card-title {
+            color: #ffb5ba;
+            /* Color en hover para el título */
+        }
 
-    }
+        .card a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card a:hover .card-title {
+            color: white;
+        }
 
 
-    body {
-    background-color:#fae5da;
-    }
 
-</style>
+
+        .contenedor-principal {
+
+            background-color: #fae5da;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+
+        body, .container {
+            background-color: #fae5da;
+        }
+    </style>
 
 
 

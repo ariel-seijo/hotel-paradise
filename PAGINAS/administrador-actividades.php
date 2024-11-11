@@ -18,7 +18,7 @@
     <?php include 'navbar.php'; ?>
     <div class="container contenedor-principal">
         <div class="row">
-            <div class="col-3 h-100vh seccion-panel gap-2">
+            <div class="col-3 seccion-panel gap-2">
                 <h1 class="display-6 text-center">PANEL DE ADMINISTRACIÓN</h1>
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-actividades.php" role="button">Actividades</a>
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-usuarios.php" role="button">Usuarios</a>
@@ -30,28 +30,6 @@
             </div>
         </div>
     </div>
-
-
-    <style>
-            .col-3{
-                background-color:#fae5da;
-            }
-            .col-9, body{
-                background-color:white;
-            }
-            .btnPanel{
-                background-color:#4bbbf2;
-                transition:.5s;
-            }
-            .btnPanel:hover{
-                background-color: #3aa3d4;
-                color:black;
-                transition:.5s;
-            }
-            
-
-
-    </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

@@ -75,7 +75,7 @@ if ($actividad_id > 0 && !empty($fecha)) {
                 if (!$isVisualizador) {
                     if ($huespedDNI !== '-----') {
                         // Si hay una reserva, mostrar el botón de cancelar
-                        echo '<td style="width: 20%;"><button class="btn btn-danger btn-sm" onclick="cancelarReserva(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Cancelar Reserva</button></td>';
+                        echo '<td style="width: 20%;"><button class="btn btn-danger btn-sm btn-cancelar" onclick="cancelarReserva(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Cancelar Reserva</button></td>';
                     } else {
                         // Si no hay reserva, mostrar el botón de reservar
                         echo '<td style="width: 20%;"><button class="btn btn-primary btn-sm" onclick="reservarTurno(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Reservar</button></td>';

@@ -34,8 +34,13 @@ $result = $stmt->get_result();
     <div class="d-flex justify-content-between mb-4">
         <!-- Formulario de búsqueda -->
         <form class="form-inline" method="GET" action="">
-            <input class="form-control mr-2" type="text" name="search" placeholder="Buscar actividad" value="<?php echo htmlspecialchars($search); ?>">
+            <input class="form-control mr-2 busqueda-filtrada" type="text" name="search" placeholder="Buscar actividad" value="<?php echo htmlspecialchars($search); ?>">
             <button class="btn btn-primary" type="submit">Buscar</button>
+            <style>
+                .busqueda-filtrada {
+                    border: 3px solid #34a09e;
+                }
+            </style>
         </form>
         <!-- Botón para añadir nueva actividad -->
         <button class="btn btn-success" data-toggle="modal" data-target="#agregarActividadModal">Añadir Nueva Actividad</button>
@@ -45,10 +50,10 @@ $result = $stmt->get_result();
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Acciones</th>
-                <th>Horarios</th>
+                <th class="col-25">Imagen</th>
+                <th class="col-25">Nombre</th>
+                <th class="col-25">Acciones</th>
+                <th class="col-25">Horarios</th>
             </tr>
         </thead>
         <tbody>
@@ -62,24 +67,18 @@ $result = $stmt->get_result();
                         <?php endif; ?>
                     </td>
                     <td><?php echo htmlspecialchars($row['nombre']); ?></td>
-                    <td>
-                        <!-- Botón de editar -->
-                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarActividadModal" data-id="<?php echo $row['id']; ?>" onclick="cargarDatosActividad(this)">Editar</button>
-                        <!-- Botón de eliminar -->
-                        <form id="eliminarActividadForm<?php echo $row['id']; ?>" action="../SCRIPT/eliminar_actividad.php" method="POST">
-                            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmarEliminar(<?php echo $row['id']; ?>)">Eliminar</button>
-                        </form>
+                    <td class="td-acciones">
+                        <div class="action-buttons">
+                            <!-- Botón de editar -->
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarActividadModal" data-id="<?php echo $row['id']; ?>" onclick="cargarDatosActividad(this)">Editar</button>
 
-                        <script>
-                            function confirmarEliminar(id) {
-                                if (confirm("¿Estás seguro de que deseas eliminar esta actividad?")) {
-                                    document.getElementById("eliminarActividadForm" + id).submit();
-                                }
-                            }
-                        </script>
-
-
+                            <!-- Botón de eliminar -->
+                            <form id="eliminarActividadForm<?php echo $row['id']; ?>" action="../SCRIPT/eliminar_actividad.php" method="POST" style="display: inline;">
+                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmarEliminar(<?php echo $row['id']; ?>)">Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
                     <td>
                         <!-- Botones de Agregar y Editar Horarios -->
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#agregarHorarioModal" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
@@ -93,6 +92,95 @@ $result = $stmt->get_result();
             <?php endwhile; ?>
         </tbody>
     </table>
+
+    <script>
+        function confirmarEliminar(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar esta actividad?")) {
+                document.getElementById("eliminarActividadForm" + id).submit();
+            }
+        }
+    </script>
+
+    <style>
+        .col-25 {
+            width: 25%;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            width: 100%;
+            /* Ajusta el espacio entre botones */
+        }
+
+        .action-buttons .btn {
+            width: 100px;
+        }
+
+        /* Estilos de los botones */
+        .btn-primary {
+            background-color: #62bfbd;
+            border: 2px solid #34a09e;
+        }
+
+        .btn-primary:focus,
+        .btn-primary:hover,
+        .btn-primary:active {
+            background-color: #34a09e;
+            border: 2px solid #34a09e;
+        }
+
+        .btn-warning {
+            color: white;
+            background-color: #4bbbf2;
+            border: 2px solid #2aa9e8;
+        }
+
+        .btn-warning:focus,
+        .btn-warning:hover,
+        .btn-warning:active {
+            color: white;
+            background-color: #2aa9e8;
+            border: 2px solid #2aa9e8;
+        }
+
+        .btn-danger {
+            background-color: #ffb5ba;
+            border: 2px solid #f36f78;
+        }
+
+        .btn-danger:focus,
+        .btn-danger:hover,
+        .btn-danger:active {
+            background-color: #f36f78;
+            border: 2px solid #f36f78;
+        }
+
+        .btn-secondary {
+            background-color: #4bbbf2;
+            border: 2px solid #2aa9e8;
+        }
+
+        .btn-secondary:focus,
+        .btn-secondary:hover,
+        .btn-secondary:active {
+            background-color: #2aa9e8;
+            border: 2px solid #2aa9e8;
+        }
+
+        .btn-success {
+            background-color: #62bfbd;
+            border: 2px solid #34a09e;
+        }
+
+        .btn-success:focus,
+        .btn-success:hover,
+        .btn-success:active {
+            background-color: #34a09e;
+            border: 2px solid #34a09e;
+        }
+    </style>
+
 </div>
 
 <!-- Modal de Editar Horarios -->

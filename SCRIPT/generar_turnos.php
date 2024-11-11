@@ -24,8 +24,8 @@ if ($actividad_id > 0) {
     exit;
 }
 ?>
-<div class="container mt-5">
-    <form id="searchForm">
+<div class="container contenedor-fecha mt-5">
+    <form class="contenedor-formulario-fecha" id="searchForm">
         <div class="form-group">
             <label for="fecha">Seleccione una fecha:</label>
             <input type="date" class="form-control" id="fecha" required>
@@ -41,6 +41,11 @@ if ($actividad_id > 0) {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <style>
+                    .modal-header {
+                        background-color: #62bfbd;
+                    }
+                </style>
                 <h5 class="modal-title" id="reservarModalLabel">Reservar Turno</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -78,7 +83,17 @@ if ($actividad_id > 0) {
                         <input type="text" class="form-control" id="horarioActividad" value="<?php echo htmlspecialchars($horario); ?>" readonly>
                     </div>
                     <button type="submit" class="btn btn-primary">Reservar</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <style>
+                        .btn-cancelar {
+                            background-color: #f5838a;
+                        }
+
+                        .btn-cancelar:hover {
+                            color: white;
+                            background-color: #f3606a;
+                        }
+                    </style>
                 </form>
             </div>
         </div>

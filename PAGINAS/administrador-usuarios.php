@@ -150,31 +150,7 @@ $result = $stmt->get_result();
             </script>
 
         </div>
-    </div>
-
-    <style>
-            .col-3{
-                background-color:#fae5da;
-            }
-            .col-9, body{
-                background-color:white;
-            }
-            .btnPanel{
-                background-color:#4bbbf2;
-                transition:.5s;
-            }
-            .btnPanel:hover{
-                background-color: #3aa3d4;
-                color:black;
-                transition:.5s;
-            }
-            .display-6{
-               
-            }
-
-
-    </style>
-    
+    </div>    
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>

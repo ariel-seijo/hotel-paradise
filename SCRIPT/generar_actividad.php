@@ -13,7 +13,7 @@ $result = $conn->query($query);
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <a href="../PAGINAS/turnos.php?id=<?php echo $row['id']; ?>" class="card text-decoration-none text-dark">
-                        <img src="<?php echo htmlspecialchars($row['imagen']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($row['nombre']); ?>" style="height: 200px; object-fit: cover;">
+                        <img src="<?php echo htmlspecialchars($row['imagen']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($row['nombre']); ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?php echo htmlspecialchars($row['nombre']); ?></h5>
                         </div>

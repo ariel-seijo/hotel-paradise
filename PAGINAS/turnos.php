@@ -28,116 +28,189 @@ if (isset($_GET['id'])) {
 }
 ?>
 
-
-
-
-
-
-
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Responsive</title>
+    <title><?php echo $actividad['nombre']?> | Turnos</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <?php include 'navbar.php'; ?>
     <style>
+        body {
+            background-color: #baddd6;
+            color: #333;
+            font-weight: normal;
+        }
+
+        .contenedor-formulario-fecha {
+            display: flex;
+            justify-content: space-around;
+            align-items: end;
+        }
+
+
+        .contenedor-fecha .form-group {
+            width: 80%;
+        }
+
+        .contenedor-fecha .form-group input {
+            border: 2px solid #62bfbd;
+        }
+
         .contenedor-principal {
-            background-color: #fae5da;
+            background-color: #baddd6;
             padding: 20px;
         }
 
-        .seccion-panel, .seccion-elegida {
+        .contenedor-secciones {
+            display: flex;
+            justify-content: space-evenly;
+            background-color: #baddd6;
+        }
+
+        .seccion-panel,
+        .seccion-elegida {
             background-color: #ffffff;
             padding: 20px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            border-radius: 8px;
         }
 
-       
         .info-cuadro {
-                background-color: #fae5da;
-                padding: 15px;
-                margin-bottom: 10px;
-                color: #4bbbf2;
-                font-weight: bold;
-                justify-content: space-between;
-                transition:.4s;   
+            background-color: #fae5da;
+            padding: 15px;
+            margin-bottom: 10px;
+            color: #4bbbf2;
+            border-radius: 5px;
+            transition: background-color 0.4s ease;
         }
-        .info-cuadro:hover{
-            background-color:#e7d3c9;
-            transition:.4s;
+
+        .info-cuadro:hover {
+            background-color: #62bfbd;
             cursor: pointer;
         }
 
-        .info-cuadro span {
-             color: #333;
+        .info-cuadro strong {
+            color: black;
+            font-weight: bold;
         }
 
-       
+        .info-cuadro span {
+            color: #333;
+        }
+
         .actividad-imagen {
             width: 100%;
             max-height: 300px;
             object-fit: cover;
+            border-radius: 8px;
         }
 
-        .volver{
-          margin-bottom:10px;
-          display:block;
-          text-align:right;
+        .volver .btn {
+            width: 185px;
         }
-        .actividad-nombre{
-            margin-bottom:20px;
-            display:flex;
-            justify-content:center;
-            font-size:3rem;
+
+        .volver .btn:hover {
+            color: white;
+            background-color: #34a09e;
         }
-        .btn-primary{
-                background-color:#4bbbf2;
-                transition:.5s;
-            }
-        .btn-primary:hover{
-                background-color: #3aa3d4;
-                color:black;
-                transition:.5s;
-            }
+
+        .actividad-nombre {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #62bfbd;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #4bbbf2;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #3aa3d4;
+            color: #333;
+        }
+
+        .btn-secondary {
+            background-color: #62bfbd;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4bbbf2;
+            color: #333;
+        }
 
 
+        .contenedor-formulario-fecha button {
+            height: 40px;
+            width: 15%;
+            background-color: #62bfbd;
+        }
+
+        .contenedor-formulario-fecha button:hover {
+            color: white;
+            background-color: #399e9c;
+        }
+
+        .contenedor-formulario-fecha button:active {
+            color: white;
+            background-color: black;
+        }
+
+
+        .accordion-button:not(.collapsed) {
+            background-color: #62bfbd;
+        }
+
+        .accordion-button {
+            background-color: rgb(179, 238, 237);
+        }
+
+        /* Responsividad */
         @media (max-width: 768px) {
-            .seccion-panel, .seccion-elegida {
+
+            .seccion-panel,
+            .seccion-elegida {
                 padding: 15px;
             }
-            .volver{
-            display:flex;
-            justify-content:center;
-            margin-bottom:10px;
-        }
+
+            .volver {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
         }
 
-       
         @media (max-width: 576px) {
             .info-cuadro {
-                flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+                flex-direction: column;
                 text-align: left;
             }
 
-            h1, h2 {
+            h1,
+            h2 {
                 font-size: 1.5rem;
+                font-weight: normal;
             }
         }
     </style>
 </head>
+
 <body>
-    
-    <?php include 'navbar.php'; ?>
     <div class="container-fluid contenedor-principal">
-        <div class="row">
-            <div class="volver container mt-3">
-                <button onclick="window.history.back();" class="btn btn-secondary">Volver</button>
-            </div>
-            <div class="col-12 col-lg-3 seccion-panel">
-                <h1 class="display-6 text-center">ACTIVIDAD</h1>
-                
+        <div class="row contenedor-secciones">
+            <div class="col-lg-3 mx-3 seccion-panel">
                 <div class="actividad-detalle">
                     <h1 class="actividad-nombre"><?php echo htmlspecialchars($actividad['nombre']); ?></h1>
 
@@ -173,8 +246,29 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
 
-            <div class="col-12 col-lg-9 seccion-elegida">
-                <h2 class="display-6 text-center">AGENDA DE TURNOS</h2>
+            <div class="col-lg-8 mx-3 seccion-elegida">
+                <div class="row">
+                    <div class="col-4">
+
+                    </div>
+                    <div class="col-4">
+                        <h2 class="display-6 text-center">AGENDA DE TURNOS</h2>
+                    </div>
+                    <div class="col-4 volver">
+                        <button onclick="window.history.back();" class="btn btn-secondary">Volver</button>
+                    </div>
+                    <style>
+                        .volver {
+                            display:flex;
+                            align-items: center;
+                            justify-content: end;
+                        }
+
+                        .col-4 {
+                            width: 33%;
+                        }
+                    </style>
+                </row>
                 <?php include '../SCRIPT/generar_turnos.php' ?>
             </div>
         </div>
@@ -183,6 +277,6 @@ if (isset($_GET['id'])) {
     <!-- Scripts de Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
