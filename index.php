@@ -99,7 +99,7 @@ if (!empty($error)) {
     /* Botón de Salir */
 
     .btn {
-      background-color: #4bbbf2;
+      background-color: #3aa4d9;
       color: white;
       border: 2px solid white;
       padding: 8px 15px;
@@ -113,7 +113,7 @@ if (!empty($error)) {
 
     .btn:hover {
       border: 2px solid white;
-      background-color: #3aa4d9;
+      background-color: #3e99c6;
       box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
     }
 

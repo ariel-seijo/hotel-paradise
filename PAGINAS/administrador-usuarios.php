@@ -54,7 +54,7 @@ $result = $stmt->get_result();
             <div class="col-3 seccion-panel gap-2">
                 <h1 class="display-6 text-center">PANEL DE ADMINISTRACIÓN</h1>
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-actividades.php" role="button">Actividades</a>
-                <a class="btn btn-primary w-100 btnPanel" href="administrador-usuarios.php" role="button">Usuarios</a>
+                <a class="btn btn-primary w-100 btnPanel active" href="administrador-usuarios.php" role="button">Usuarios</a>
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-registros.php" role="button">Registro de turnos</a>
             </div>
             <div class="col-9 seccion-elegida">
@@ -70,13 +70,18 @@ $result = $stmt->get_result();
                 <div class="d-flex justify-content-between align-items-center mb-3 px-4">
                     <form method="get" class="form-inline">
                         <input type="text" name="search" placeholder="Buscar por nombre o tipo de usuario" value="<?= $searchQuery ?>" class="form-control mr-2">
+                        <style>
+                            .mr-2 {
+                                border: 2px solid #34a09e;
+                            }
+                        </style>
                         <button type="submit" class="btn btn-primary">Buscar</button>
                     </form>
                     <button class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Añadir Usuario</button>
                 </div>
 
                 <div class="table-responsive scrollable-table px-4">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-striped custom-border">
                         <thead>
                             <tr>
                                 <th style="width: 25%;">Nombre de Usuario</th>
@@ -108,6 +113,20 @@ $result = $stmt->get_result();
                         </tbody>
                     </table>
                 </div>
+                <style>
+                    .custom-border {
+                        border: 2px solid #34a09e;
+                        /* Borde exterior */
+                        border-collapse: collapse;
+                        /* Colapsa el borde */
+                    }
+
+                    .custom-border th,
+                    .custom-border td {
+                        border: none;
+                        /* Sin borde en las celdas */
+                    }
+                </style>
             </div>
             <!-- Modal para añadir usuario -->
             <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
@@ -150,7 +169,83 @@ $result = $stmt->get_result();
             </script>
 
         </div>
-    </div>    
+    </div>
+    <style>
+        /* Estilos de los botones */
+        .btn-primary {
+            color: black;
+            background-color: #62bfbd;
+            border: 2px solid #34a09e;
+        }
+
+        .btn-primary:focus,
+        .btn-primary:hover,
+        .btn-primary:active {
+            background-color: #34a09e;
+            border: 2px solid #34a09e;
+        }
+
+        .btn-warning {
+            color: black;
+            background-color: #4bbbf2;
+            border: 2px solid #2aa9e8;
+        }
+
+        .btn-warning:focus,
+        .btn-warning:hover,
+        .btn-warning:active {
+            color: white;
+            background-color: #2aa9e8;
+            border: 2px solid #2aa9e8;
+        }
+
+        .btn-danger {
+            color: black;
+            background-color: #ffb5ba;
+            border: 2px solid #f36f78;
+        }
+
+        .btn-danger:focus,
+        .btn-danger:hover,
+        .btn-danger:active {
+            background-color: #f36f78;
+            border: 2px solid #f36f78;
+        }
+
+        .btn-secondary {
+            color: black;
+            background-color: #4bbbf2;
+            border: 2px solid #2aa9e8;
+        }
+
+        .btn-secondary:focus,
+        .btn-secondary:hover,
+        .btn-secondary:active {
+            background-color: #2aa9e8;
+            border: 2px solid #2aa9e8;
+        }
+
+        .btn-success {
+            color: black;
+            background-color: #62bfbd;
+            border: 2px solid #34a09e;
+        }
+
+        .btn-success:focus,
+        .btn-success:hover,
+        .btn-success:active {
+            background-color: #34a09e;
+            border: 2px solid #34a09e;
+        }
+
+        .modal-header {
+            background-color: #62bfbd;
+        }
+
+        .modal-footer {
+            background-color: #b8f4f3;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>

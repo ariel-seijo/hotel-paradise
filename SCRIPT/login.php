@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Redirección según el tipo de usuario
                 if ($usuario['isAdmin'] == 1) {
-                    header("Location: ../PAGINAS/panel-administrador.php"); // Página para administradores
+                    header("Location: ../PAGINAS/administrador-actividades.php"); // Página para administradores
                 } else {
                     header("Location: ../PAGINAS/actividades.php"); // Página para recepcionistas
                 }

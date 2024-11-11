@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-3 seccion-panel gap-2">
                 <h1 class="display-6 text-center">PANEL DE ADMINISTRACIÓN</h1>
-                <a class="btn btn-primary w-100 btnPanel" href="administrador-actividades.php" role="button">Actividades</a>
+                <a class="btn btn-primary w-100 btnPanel active" href="administrador-actividades.php" role="button">Actividades</a>
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-usuarios.php" role="button">Usuarios</a>
                 <a class="btn btn-primary w-100 btnPanel" href="administrador-registros.php" role="button">Registro de turnos</a>
             </div>

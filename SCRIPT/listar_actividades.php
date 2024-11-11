@@ -119,6 +119,7 @@ $result = $stmt->get_result();
 
         /* Estilos de los botones */
         .btn-primary {
+            color: black;
             background-color: #62bfbd;
             border: 2px solid #34a09e;
         }
@@ -131,7 +132,7 @@ $result = $stmt->get_result();
         }
 
         .btn-warning {
-            color: white;
+            color: black;
             background-color: #4bbbf2;
             border: 2px solid #2aa9e8;
         }
@@ -145,6 +146,7 @@ $result = $stmt->get_result();
         }
 
         .btn-danger {
+            color: black;
             background-color: #ffb5ba;
             border: 2px solid #f36f78;
         }
@@ -157,6 +159,7 @@ $result = $stmt->get_result();
         }
 
         .btn-secondary {
+            color: black;
             background-color: #4bbbf2;
             border: 2px solid #2aa9e8;
         }
@@ -169,6 +172,7 @@ $result = $stmt->get_result();
         }
 
         .btn-success {
+            color: black;
             background-color: #62bfbd;
             border: 2px solid #34a09e;
         }
@@ -178,6 +182,30 @@ $result = $stmt->get_result();
         .btn-success:active {
             background-color: #34a09e;
             border: 2px solid #34a09e;
+        }
+
+        .modal-header {
+            background-color: #62bfbd;
+        }
+
+        .table {
+            border: 2px solid #34a09e;
+            /* Borde externo */
+            border-collapse: collapse;
+            /* Colapsa los bordes */
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: none;
+            /* Sin borde interno */
+            padding: 10px;
+            text-align: left;
+        }
+
+        .modal-footer {
+            background-color: #b8f4f3;
         }
     </style>
 

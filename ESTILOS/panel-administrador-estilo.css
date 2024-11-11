@@ -40,11 +40,11 @@
 .col-3 {
     min-height: 100vh;
     border-right: 2px solid #1b4a62;
-    background-color: #96d3f1;
+    background-color: white;
 }
 
 body {
-    background-color:#baddd6;
+    background-color: white;
 }
 .btnPanel{
     background-color:#4bbbf2;
