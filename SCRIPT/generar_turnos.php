@@ -110,8 +110,9 @@ if ($actividad_id > 0) {
         const actividadId = '<?php echo $actividad_id; ?>';
         const horario = document.getElementById('horarioActividad').value;
         const fecha = document.getElementById('fechaActividad').value;
+        const correoHuesped = document.getElementById('correoHuesped').value; // Nuevo campo de correo electrónico
 
-        console.log(turnoId, dniHuesped, actividadId, horario, fecha); // Muestra los valores en consola
+        console.log(turnoId, dniHuesped, actividadId, horario, fecha, correoHuesped); // Muestra los valores en consola
 
         fetch('../SCRIPT/guardar_reserva.php', {
                 method: 'POST',
@@ -123,14 +124,14 @@ if ($actividad_id > 0) {
                     huesped_dni: dniHuesped,
                     actividad_id: actividadId,
                     horario: horario,
-                    fecha: fecha
+                    fecha: fecha,
+                    correo: correoHuesped // Enviar el correo electrónico
                 })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
                     alert('Reserva realizada con éxito.');
-                    // Cierra el modal
                     $('#reservarModal').modal('hide');
                     location.reload();
                 } else {
@@ -189,6 +190,8 @@ if ($actividad_id > 0) {
         // Comprobar si la fecha seleccionada es anterior o igual a la fecha actual
         if (fechaSeleccionada < fechaActual) {
             document.getElementById('result').innerHTML = '<div class="alert alert-danger">No se puede reservar turnos en días anteriores a la fecha.</div>';
+            document.getElementById("btn-pdf").style.display = "none";
+            document.getElementById("btn-excel").style.display = "none";
             return; // Detiene el proceso si la fecha no es válida
         }
 
@@ -214,11 +217,17 @@ if ($actividad_id > 0) {
             fetch(`../SCRIPT/obtener_turnos.php?id=<?php echo $actividad_id; ?>&capacidad_turno=<?php echo $capacidad_turno; ?>&fecha=${fechaSeleccionada}`)
                 .then(response => response.text())
                 .then(data => {
-                    resultDiv.innerHTML = data; // Agregar la lista de horarios al resultado
+                    resultDiv.innerHTML = data;
+                    document.getElementById("btn-pdf").style.display = "inline";
+                    document.getElementById("btn-excel").style.display = "inline"; // Agregar la lista de horarios al resultado
                 })
                 .catch(error => console.error('Error al obtener los turnos:', error));
+                document.getElementById("btn-pdf").style.display = "none";
+                document.getElementById("btn-excel").style.display = "none";
         } else {
             resultDiv.innerHTML = '<div class="alert alert-danger">La actividad no tiene turnos asignados para estos días.</div>';
+            document.getElementById("btn-pdf").style.display = "none";
+            document.getElementById("btn-excel").style.display = "none";
         }
     });
 

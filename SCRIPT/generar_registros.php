@@ -2,6 +2,9 @@
 // Incluir la conexión a la base de datos
 include 'conexion.php';
 
+// Incluir la librería mPDF
+require_once('../vendor/autoload.php');
+
 // Inicializar variables de filtro
 $filtroFecha = isset($_GET['fecha']) ? $_GET['fecha'] : '';
 $filtroNombreHuesped = isset($_GET['nombre_huesped']) ? $_GET['nombre_huesped'] : '';
@@ -94,6 +97,43 @@ $result = $stmt->get_result();
             </style>
         </div>
     </form>
+
+    <!-- Botón para descargar el PDF -->
+    <button type="button" class="btn btn-danger mb-3" onclick="downloadPDF()">
+    <i class="bi bi-filetype-pdf"></i>
+    Exportar PDF</button>
+
+    <script>
+        function downloadPDF() {
+            // Construir la URL con los parámetros de los filtros
+            var url = "../SCRIPT/generar_pdf_registros.php?";
+            url += "fecha=" + encodeURIComponent("<?php echo htmlspecialchars($filtroFecha); ?>");
+            url += "&nombre_huesped=" + encodeURIComponent("<?php echo htmlspecialchars($filtroNombreHuesped); ?>");
+            url += "&dni=" + encodeURIComponent("<?php echo htmlspecialchars($filtroDNI); ?>");
+            url += "&nombre_actividad=" + encodeURIComponent("<?php echo htmlspecialchars($filtroActividad); ?>");
+
+            // Redirigir a la URL generada
+            window.location.href = url;
+        }
+    </script>
+
+    <button type="button" class="btn btn-success mb-3" onclick="downloadExcel()">
+    <i class="bi bi-file-earmark-excel"></i> Exportar Excel</button>
+
+    <script>
+        function downloadExcel() {
+            // Construir la URL con los parámetros de los filtros
+            var url = "../SCRIPT/generar_excel_registros.php?";
+            url += "fecha=" + encodeURIComponent("<?php echo htmlspecialchars($filtroFecha); ?>");
+            url += "&nombre_huesped=" + encodeURIComponent("<?php echo htmlspecialchars($filtroNombreHuesped); ?>");
+            url += "&dni=" + encodeURIComponent("<?php echo htmlspecialchars($filtroDNI); ?>");
+            url += "&nombre_actividad=" + encodeURIComponent("<?php echo htmlspecialchars($filtroActividad); ?>");
+
+            // Redirigir a la URL generada
+            window.location.href = url;
+        }
+    </script>
+
 
     <!-- Contenedor para hacer la tabla scrolleable -->
     <div class="table-responsive" style="max-height: 550px; overflow-y: auto;">

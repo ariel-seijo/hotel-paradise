@@ -19,6 +19,46 @@ if ($actividad_id > 0 && !empty($fecha)) {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
+        echo '<button class="btn btn-success" id="btn-pdf" style="width: 20%; display: none;" onclick="window.location.href=\'../SCRIPT/generar_pdf.php?id=' . $actividad_id . '&capacidad_turno=' . $capacidad_turno . '&fecha=' . urlencode($fecha) . '\'">
+        <i class="bi bi-filetype-pdf"></i> Exportar PDF
+      </button>';
+
+        echo '<button class="btn btn-danger" id="btn-excel" style="width: 20%; display: none;" onclick="window.location.href=\'../SCRIPT/generar_excel.php?id=' . $actividad_id . '&capacidad_turno=' . $capacidad_turno . '&fecha=' . urlencode($fecha) . '\'">
+        <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+      </button>';
+
+        echo '<style>
+        #btn-excel {
+            margin-bottom: 20px;
+            margin-left: 20px;
+            color: white;
+            background-color: #62bfbd;
+            border: 2px solid #34a09e;
+        }
+
+        #btn-excel:focus,
+        #btn-excel:hover,
+        #btn-excel:active {
+            background-color: #34a09e;
+            border: 2px solid #34a09e;
+        }
+        #btn-pdf {
+            margin-bottom: 20px;
+            color: white;
+            background-color: #ffb5ba;
+            border: 2px solid #f36f78;
+        }
+
+        #btn-pdf:focus,
+        #btn-pdf:hover,
+        #btn-pdf:active {
+            background-color: #f36f78;
+            border: 2px solid #f36f78;
+        }
+        
+        
+        </style>';
+
         echo '<div class="accordion" id="horariosAccordion">';
         while ($row = $result->fetch_assoc()) {
             $horarioId = $row['id'];
@@ -94,4 +134,3 @@ if ($actividad_id > 0 && !empty($fecha)) {
 } else {
     echo '<div class="alert alert-danger">ID de actividad no válido o fecha no proporcionada.</div>';
 }
-?>
