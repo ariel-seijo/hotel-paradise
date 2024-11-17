@@ -131,7 +131,7 @@ if ($actividad_id > 0) {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert('Reserva realizada con éxito.');
+                    alert('Reserva realizada con éxito. Se ha enviado un correo con la confirmación al huésped.');
                     $('#reservarModal').modal('hide');
                     location.reload();
                 } else {

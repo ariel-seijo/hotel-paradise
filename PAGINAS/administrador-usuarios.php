@@ -21,6 +21,7 @@ $result = $stmt->get_result();
 <html lang="en">
 
 <head>
+    <link rel="icon" href="../IMAGENES/paradise-icono.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USUARIOS - Hotel Paradise</title>
@@ -49,6 +50,11 @@ $result = $stmt->get_result();
 
 <body>
     <?php include 'navbar.php'; ?>
+    <style>
+        .modal-header {
+            color: white;
+        }
+    </style>
     <div class="container contenedor-principal">
         <div class="row">
             <div class="col-3 seccion-panel gap-2">

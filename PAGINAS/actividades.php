@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" href="../IMAGENES/paradise-icono.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACTIVIDADES - Hotel Paradise</title>
@@ -80,7 +81,7 @@
 
         .contenedor-principal {
 
-            background-color: #fae5da;
+            background-color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -90,7 +91,7 @@
 
 
         body, .container {
-            background-color: #fae5da;
+            background-color: white;
         }
     </style>
 

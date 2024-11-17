@@ -69,7 +69,7 @@ if ($actividad_id > 0 && !empty($fecha)) {
             echo '<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' . $horarioId . '" aria-expanded="true" aria-controls="collapse' . $horarioId . '">';
             echo 'Horario: ' . htmlspecialchars($horario);
             echo '</button></h2>';
-            echo '<div id="collapse' . $horarioId . '" class="accordion-collapse collapse show" aria-labelledby="heading' . $horarioId . '" data-bs-parent="#horariosAccordion">';
+            echo '<div id="collapse' . $horarioId . '" class="accordion-collapse collapse" aria-labelledby="heading' . $horarioId . '" data-bs-parent="#horariosAccordion">';
             echo '<div class="accordion-body">';
 
             // Generar filas de reservas

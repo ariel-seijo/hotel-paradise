@@ -32,6 +32,7 @@ if (isset($_GET['id'])) {
 <html lang="es">
 
 <head>
+    <link rel="icon" href="../IMAGENES/paradise-icono.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $actividad['nombre']?> | Turnos</title>
@@ -81,7 +82,7 @@ if (isset($_GET['id'])) {
         }
 
         .info-cuadro {
-            background-color: #fae5da;
+            background-color: #62bfbd4a;
             padding: 15px;
             margin-bottom: 10px;
             color: #4bbbf2;

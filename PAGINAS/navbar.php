@@ -14,7 +14,7 @@ if (isset($_SESSION['isAdmin'])) {
 <nav class="navbar navbar-expand-lg navbar-custom">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <img src="../IMAGENES/logo-muestra.png" alt="logo de hotel" width="75" height="75" class="d-inline-block align-text-center me-2">
+      <img src="../IMAGENES/paradise-logo.png" alt="logo de hotel" width="75" height="75" class="d-inline-block align-text-center me-2">
       <span class="fs-3 fw-bold text-white">Hotel Paradise</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,7 @@ if (isset($_SESSION['isAdmin'])) {
     margin-right: 10px; /* Espacio entre logo y texto */
     border-radius: 50%; /* Logo redondeado */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra del logo */
+    border: 3px solid white;
 }
 
 .navbar-custom .navbar-brand span {

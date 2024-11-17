@@ -102,6 +102,10 @@ $result = $stmt->get_result();
     </script>
 
     <style>
+        .modal-header {
+            color: white;
+        }
+
         .col-25 {
             width: 25%;
         }

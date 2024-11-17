@@ -1,36 +1,46 @@
 <?php
-function enviarCorreoReserva($correo, $huesped_dni, $actividad_id, $fecha, $horario) {
-    // Configuración del encabezado del correo
-    $to = $correo;
-    $subject = "Confirmación de Reserva para $actividad_id";
-    $headers = "From: arielseijo@mail.com\r\n";
-    $headers .= "Reply-To: arielseijo@mail.com\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+require '../vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-    // Cuerpo del mensaje
-    $message = "
-        <html>
-        <head>
-            <title>Confirmación de Reserva</title>
-        </head>
-        <body>
-            <h2>Hola, $huesped_dni</h2>
-            <p>Gracias por reservar en nuestra actividad <strong>$actividad_id</strong>.</p>
-            <p><strong>Detalles de tu reserva:</strong></p>
+function enviarCorreoConfirmacion($correo, $huespedNombre, $nombreActividad, $horario, $fecha) {
+    $mail = new PHPMailer(true);
+
+    try {
+        // Configuración del servidor SMTP
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'tas.consultora@gmail.com';
+        $mail->Password = 'drtg ebyv rmet avku';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        // Configuración del remitente y destinatario
+        $mail->setFrom('tas.consultora@gmail.com', 'Hotel Paradise');
+        $mail->addAddress($correo);
+
+        // Contenido del correo
+        $mail->isHTML(true);
+        $mail->Subject = 'Reserva realizada exitosamente';
+        $mail->Body = "
+            <h1>Confirmación de Reserva</h1>
+            <p>Estimado {$huespedNombre},</p>
+            <p>Su reserva para la actividad {$nombreActividad} se ha realizado con éxito. Aquí tiene los detalles de dicha reserva:</p>
             <ul>
-                <li>Fecha: $fecha</li>
-                <li>Horario: $horario</li>
+                <li><strong>Horario:</strong> {$horario}</li>
+                <li><strong>Fecha:</strong> {$fecha}</li>
             </ul>
-            <p>Te esperamos en la fecha indicada.</p>
-        </body>
-        </html>
-    ";
+            <p>Gracias por confiar en nosotros.</p>
+        ";
 
-    // Envía el correo
-    if (mail($to, $subject, $message, $headers)) {
+        // Envía el correo
+        $mail->send();
         return true;
-    } else {
+    } catch (Exception $e) {
+        error_log("No se pudo enviar el correo. Error: {$mail->ErrorInfo}");
         return false;
     }
 }
 ?>
+
