@@ -19,17 +19,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($resultado->num_rows > 0) {
             $usuario = $resultado->fetch_assoc();
-            // Verificar la contraseña
-            if ($contraseña === $usuario['contraseña']) {
+            // Verificar la contraseña utilizando password_verify
+            if (password_verify($contraseña, $usuario['contraseña'])) {
                 // Contraseña correcta, iniciar sesión
                 $_SESSION['usuario'] = $usuario['email'];
                 $_SESSION['isAdmin'] = $usuario['isAdmin'];
-                header("Location: ../PAGINAS/actividades.php"); // Redirigir a actividades.php
+
+                // Redirección según el tipo de usuario
+                if ($usuario['isAdmin'] == 1) {
+                    header("Location: ../PAGINAS/administrador-actividades.php"); // Página para administradores
+                } else {
+                    header("Location: ../PAGINAS/actividades.php"); // Página para recepcionistas
+                }
                 exit();
             }
         }
         // Si el usuario no se encontró o la contraseña es incorrecta
-        $_SESSION['error'] = "Correo electronico o contraseña incorrectos."; // Almacenar el error en la sesión
+        $_SESSION['error'] = "Correo electrónico o contraseña incorrectos."; // Almacenar el error en la sesión
     } else {
         $_SESSION['error'] = "Datos no enviados correctamente."; // Almacenar otro tipo de error
     }
