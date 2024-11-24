@@ -1,6 +1,6 @@
 <?php
 session_start();
-$rol = 'Visualizador'; // Valor por defecto si no hay sesión activa
+$rol = 'Invitado'; // Valor por defecto si no hay sesión activa
 
 if (isset($_SESSION['isAdmin'])) {
   if ($_SESSION['isAdmin'] == 1) {
