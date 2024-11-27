@@ -339,7 +339,7 @@ $result = $stmt->get_result();
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="capacidad_turno">Capacidad por Turno</label>
+                                <label for="capacidad_turno">Turnos por horario</label>
                                 <input type="number" class="form-control" id="capacidad_turno" name="capacidad_turno" min="1" value="1" readonly required>
                             </div>
                             <div class="form-group">
@@ -470,7 +470,7 @@ $result = $stmt->get_result();
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="editar_capacidad_turno">Capacidad por Turno</label>
+                                <label for="editar_capacidad_turno">Turnos por horario</label>
                                 <input type="number" class="form-control" id="editar_capacidad_turno" name="capacidad_turno" min="1" value="1" required>
                             </div>
                             <div class="form-group">

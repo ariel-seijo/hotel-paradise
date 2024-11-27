@@ -75,12 +75,11 @@ if ($actividad_id > 0 && !empty($fecha)) {
             // Generar filas de reservas
             echo '<table class="table">';
             echo '<thead><tr>';
-            echo '<th style="width: 20%;">Número de Turno</th>';
-            echo '<th style="width: 20%;">Turno</th>';
-            echo '<th style="width: 20%;">DNI de Huésped</th>';
-            echo '<th style="width: 20%;">Nombre de Huésped</th>';
+            echo '<th style="width: 25%;">Número de Turno</th>';
+            echo '<th style="width: 25%;">DNI de Huésped</th>';
+            echo '<th style="width: 25%;">Nombre de Huésped</th>';
             if (!$isVisualizador) {
-                echo '<th style="width: 20%;">Acciones</th>';
+                echo '<th style="width: 25%;">Acciones</th>';
             }
             echo '</tr></thead>';
             echo '<tbody>';
@@ -106,11 +105,10 @@ if ($actividad_id > 0 && !empty($fecha)) {
                     $huespedNombre = '-----';
                 }
 
-                echo '<tr style="width: 20%;" id="turno-' . $turnoIdUnico . '">';
-                echo '<td style="width: 20%;">' . $i . '/' . $capacidad_turno . '</td>';
-                echo '<td style="width: 20%;">' . htmlspecialchars($turnoIdUnico) . '</td>';
-                echo '<td style="width: 20%;">' . htmlspecialchars($huespedDNI) . '</td>';
-                echo '<td style="width: 20%;">' . htmlspecialchars($huespedNombre) . '</td>';
+                echo '<tr style="width: 25%;" id="turno-' . $turnoIdUnico . '">';
+                echo '<td style="width: 25%;">' . $i . '/' . $capacidad_turno . '</td>';
+                echo '<td style="width: 25%;">' . htmlspecialchars($huespedDNI) . '</td>';
+                echo '<td style="width: 25%;">' . htmlspecialchars($huespedNombre) . '</td>';
 
                 if (!$isVisualizador) {
                     if ($huespedDNI !== '-----') {

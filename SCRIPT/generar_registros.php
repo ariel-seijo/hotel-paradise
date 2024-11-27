@@ -12,6 +12,7 @@ $filtroDNI = isset($_GET['dni']) ? $_GET['dni'] : '';
 $filtroActividad = isset($_GET['nombre_actividad']) ? $_GET['nombre_actividad'] : '';
 
 // Construir la consulta con filtros
+// Construir la consulta con filtros
 $sql = "SELECT 
             reservas.id, 
             reservas.huesped_dni, 
@@ -39,6 +40,9 @@ if (!empty($filtroDNI)) {
 if (!empty($filtroActividad)) {
     $sql .= " AND actividades.nombre LIKE ?";
 }
+
+// Agregar orden por fecha descendente
+$sql .= " ORDER BY reservas.fecha DESC";
 
 // Preparar la consulta
 $stmt = $conn->prepare($sql);

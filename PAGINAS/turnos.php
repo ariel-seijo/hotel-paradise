@@ -239,7 +239,7 @@ if (isset($_GET['id'])) {
                     </div>
 
                     <div class="info-cuadro">
-                        <strong>Capacidad por turno:</strong> <span><?php echo htmlspecialchars($actividad['capacidad_turno']); ?> personas</span>
+                        <strong>Turnos por horario:</strong> <span><?php echo htmlspecialchars($actividad['capacidad_turno']); ?> turnos</span>
                     </div>
 
                     <div class="info-cuadro">
