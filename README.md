@@ -1,6 +1,6 @@
 # Sistema de Reservas para Actividades de Hotel 🏨
 
-Este proyecto es un sistema de reservas desarrollado para gestionar actividades en un hotel, permitiendo a los huéspedes registrarse, reservar actividades y consultar horarios disponibles. Fue construido utilizando tecnologías modernas y prácticas de desarrollo web.
+Este proyecto es un sistema de reservas desarrollado para gestionar actividades en un hotel, pensado para tres tipos de usuarios finales: Administrador, Recepcionista y Huésped.
 
 ## Tecnologías Utilizadas
 
@@ -20,25 +20,30 @@ Este proyecto es un sistema de reservas desarrollado para gestionar actividades 
 
 ## Funcionalidades Principales
 
-1. **Gestión de Actividades**  
+1. **Login.**
+   - Inicio de sesión para usuarios Administrador y Recepcionista.
+   - Recuperación de contraseña vía mail.
+     
+2. **Gestión de Usuarios**  
+   - Creación, edición y eliminación de usuarios.  
+   - Configuración de permisos.
+     
+3. **Gestión de Actividades**  
    - Creación, edición y eliminación de actividades.  
-   - Configuración de horarios y cupos por actividad.  
+   - Configuración de horarios y cupos por actividad.
 
-2. **Reservas de Huéspedes**  
+4. **Reservas de Huéspedes**  
    - Registro de reservas con validación de DNI y datos requeridos.  
    - Confirmación de reserva con envío de correo electrónico.  
    - Gestión de fechas y horarios en tiempo real.  
 
-3. **Panel de Administración**  
+5. **Panel de Administración**  
    - Listado de actividades y reservas.  
    - Modales dinámicos para agregar o editar actividades.  
    - Control de acceso según rol (administrador o recepcionista).  
 
-4. **Generación de PDF**  
+6. **Generación de PDF**  
    - Exportación de datos de actividades y horarios seleccionados.  
-
-5. **Recuperación de Contraseña**  
-   - Función "Olvidé mi contraseña" para recuperación segura.  
 
 ## Estructura del Proyecto
 
@@ -56,15 +61,16 @@ conexion.php # Conexión a la base de datos
 - MySQL 5.7 o superior.
 
 ### Instrucciones
-1. Clona este repositorio en tu servidor local:  
-   ```bash
-   git clone https://github.com/usuario/sistema-reservas-hotel.git
+1. Clona este repositorio en C:\xampp\htdocs:
+   git clone https://github.com/ariel-seijo/hotel-paradise
+   
 Configura la base de datos importando el archivo database.sql incluido en el proyecto.
+
 Edita el archivo conexion.php con tus credenciales de MySQL:
 
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "sistema_reservas";
+$dbname = "paradise";
 
-Accede al sistema desde tu navegador en http://localhost/sistema-reservas-hotel.
+Accede al sistema desde tu navegador en http://localhost/hotel-paradise/
