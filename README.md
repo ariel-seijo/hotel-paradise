@@ -64,7 +64,7 @@ conexion.php # Conexión a la base de datos
 1. Clona este repositorio en C:\xampp\htdocs:
    git clone https://github.com/ariel-seijo/hotel-paradise
    
-Configura la base de datos importando el archivo database.sql incluido en el proyecto.
+Configura la base de datos importando el archivo paradise bdd.sql incluido en el proyecto.
 
 Edita el archivo conexion.php con tus credenciales de MySQL:
 
