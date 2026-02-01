@@ -1,13 +1,11 @@
 <?php
-// listar_actividades.php
 
-// Conexión a la base de datos
 include 'conexion.php';
 
-// Inicializa la variable de búsqueda
+
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Consulta para obtener las actividades
+
 $sql = "SELECT * FROM actividades";
 if (!empty($search)) {
     $sql .= " WHERE nombre LIKE ?";
@@ -25,14 +23,14 @@ $result = $stmt->get_result();
 <?php if (isset($_SESSION['mensaje'])): ?>
     <div class="alert alert-success" role="alert">
         <?php
-        echo $_SESSION['mensaje']; // Mostrar el mensaje
-        unset($_SESSION['mensaje']); // Eliminar el mensaje de la sesión
+        echo $_SESSION['mensaje'];
+        unset($_SESSION['mensaje']);
         ?>
     </div>
 <?php endif; ?>
 <div class="container mt-5">
     <div class="d-flex justify-content-between mb-4">
-        <!-- Formulario de búsqueda -->
+
         <form class="form-inline" method="GET" action="">
             <input class="form-control mr-2 busqueda-filtrada" type="text" name="search" placeholder="Buscar actividad" value="<?php echo htmlspecialchars($search); ?>">
             <button class="btn btn-primary" type="submit">Buscar</button>
@@ -42,11 +40,11 @@ $result = $stmt->get_result();
                 }
             </style>
         </form>
-        <!-- Botón para añadir nueva actividad -->
+
         <button class="btn btn-success" data-toggle="modal" data-target="#agregarActividadModal">Añadir Nueva Actividad</button>
     </div>
 
-    <!-- Listado de actividades -->
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -69,10 +67,10 @@ $result = $stmt->get_result();
                     <td><?php echo htmlspecialchars($row['nombre']); ?></td>
                     <td class="td-acciones">
                         <div class="action-buttons">
-                            <!-- Botón de editar -->
+
                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarActividadModal" data-id="<?php echo $row['id']; ?>" onclick="cargarDatosActividad(this)">Editar</button>
 
-                            <!-- Botón de eliminar -->
+
                             <form id="eliminarActividadForm<?php echo $row['id']; ?>" action="../SCRIPT/eliminar_actividad.php" method="POST" style="display: inline;">
                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                 <button type="button" class="btn btn-sm btn-danger" onclick="confirmarEliminar(<?php echo $row['id']; ?>)">Eliminar</button>
@@ -80,7 +78,7 @@ $result = $stmt->get_result();
                         </div>
                     </td>
                     <td>
-                        <!-- Botones de Agregar y Editar Horarios -->
+
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#agregarHorarioModal" onclick="abrirAgregarHorarioModal(<?php echo $row['id']; ?>)">
                             Agregar horario
                         </button>
@@ -114,14 +112,14 @@ $result = $stmt->get_result();
             display: flex;
             gap: 5px;
             width: 100%;
-            /* Ajusta el espacio entre botones */
+
         }
 
         .action-buttons .btn {
             width: 100px;
         }
 
-        /* Estilos de los botones */
+
         .btn-primary {
             color: black;
             background-color: #62bfbd;
@@ -194,16 +192,16 @@ $result = $stmt->get_result();
 
         .table {
             border: 2px solid #34a09e;
-            /* Borde externo */
+
             border-collapse: collapse;
-            /* Colapsa los bordes */
+
             width: 100%;
         }
 
         td,
         th {
             border: none;
-            /* Sin borde interno */
+
             padding: 10px;
             text-align: left;
         }
@@ -215,7 +213,6 @@ $result = $stmt->get_result();
 
 </div>
 
-<!-- Modal de Editar Horarios -->
 <div class="modal fade" id="editarHorariosModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -226,7 +223,7 @@ $result = $stmt->get_result();
                 </button>
             </div>
             <div class="modal-body" id="horariosContainer">
-                <!-- Los campos de horario se cargarán aquí mediante JavaScript -->
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -235,7 +232,7 @@ $result = $stmt->get_result();
     </div>
 </div>
 
-<!-- Modal de Agregar Horario -->
+
 <div class="modal fade" id="agregarHorarioModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -260,7 +257,7 @@ $result = $stmt->get_result();
     </div>
 </div>
 
-<!-- Modal para agregar actividad -->
+
 <div class="modal fade" id="agregarActividadModal" tabindex="-1" role="dialog" aria-labelledby="agregarActividadModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -363,10 +360,10 @@ $result = $stmt->get_result();
         var formato = document.getElementById("formato").value;
         var capacidadTurno = document.getElementById("capacidad_turno");
         if (formato == "individual") {
-            capacidadTurno.value = 1; // Establecer capacidad a 1
-            capacidadTurno.readOnly = true; // Deshabilitar el campo
+            capacidadTurno.value = 1;
+            capacidadTurno.readOnly = true;
         } else {
-            capacidadTurno.readOnly = false; // Habilitar el campo para grupos
+            capacidadTurno.readOnly = false;
         }
     }
 </script>
@@ -386,18 +383,18 @@ $result = $stmt->get_result();
             const reader = new FileReader();
             reader.onload = function(e) {
                 imgPreview.src = e.target.result;
-                imgPreview.style.display = 'block'; // Mostrar la imagen
+                imgPreview.style.display = 'block';
             }
             reader.readAsDataURL(file);
         } else {
             imgPreview.src = '';
-            imgPreview.style.display = 'none'; // Ocultar si no hay archivo
+            imgPreview.style.display = 'none';
         }
     });
 </script>
 
 
-<!-- Modal para editar actividad -->
+
 <div class="modal fade" id="editarActividadModal" tabindex="-1" role="dialog" aria-labelledby="editarActividadModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -499,7 +496,7 @@ $result = $stmt->get_result();
     let horarioInicio, horarioCierre;
 
     function abrirEditarHorariosModal(actividadId) {
-        // Obtener el rango de horarios y los horarios de la actividad
+
         fetch(`../SCRIPT/obtenerRangoHorario.php?id=${actividadId}`)
             .then(response => response.json())
             .then(data => {
@@ -507,27 +504,25 @@ $result = $stmt->get_result();
                     horarioInicio = data.horario_inicio;
                     horarioCierre = data.horario_cierre;
 
-                    // Obtener los horarios asociados a la actividad
+
                     fetch(`../SCRIPT/obtenerHorariosActividad.php?id=${actividadId}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
                                 const horariosContainer = document.getElementById('horariosContainer');
-                                horariosContainer.innerHTML = ''; // Limpiar el contenedor
+                                horariosContainer.innerHTML = '';
 
                                 data.horarios.forEach(horario => {
                                     const horarioRow = document.createElement('div');
                                     horarioRow.className = 'form-group d-flex align-items-center';
 
-                                    // Campo de horario
                                     const horarioInput = document.createElement('input');
                                     horarioInput.type = 'time';
                                     horarioInput.value = horario.horario;
                                     horarioInput.className = 'form-control mr-2';
-                                    horarioInput.disabled = true; // Deshabilitado por defecto
+                                    horarioInput.disabled = true;
                                     horarioInput.dataset.horarioId = horario.id;
 
-                                    // Botón Editar
                                     const editButton = document.createElement('button');
                                     editButton.className = 'btn btn-warning btn-sm mr-2';
                                     editButton.innerText = 'Editar';
@@ -540,13 +535,11 @@ $result = $stmt->get_result();
                                         }
                                     };
 
-                                    // Botón Eliminar
                                     const deleteButton = document.createElement('button');
                                     deleteButton.className = 'btn btn-danger btn-sm';
                                     deleteButton.innerText = 'Eliminar';
                                     deleteButton.onclick = () => eliminarHorario(horario.id);
 
-                                    // Agregar elementos al contenedor
                                     horarioRow.appendChild(horarioInput);
                                     horarioRow.appendChild(editButton);
                                     horarioRow.appendChild(deleteButton);
@@ -564,9 +557,9 @@ $result = $stmt->get_result();
     }
 
     function actualizarHorario(horarioId, nuevoHorario) {
-        // Verificar que el horario esté dentro del rango permitido
+
         if (nuevoHorario >= horarioInicio && nuevoHorario <= horarioCierre) {
-            // Enviar el nuevo horario al servidor
+
             fetch('../SCRIPT/actualizarHorario.php', {
                     method: 'POST',
                     headers: {
@@ -600,7 +593,7 @@ $result = $stmt->get_result();
                 .then(data => {
                     if (data.success) {
                         alert('Horario eliminado correctamente');
-                        $('#editarHorarioModal').modal('hide'); // Cerrar el modal
+                        $('#editarHorarioModal').modal('hide');
                         location.reload();;
                     } else {
                         alert(data.error || 'Error al eliminar el horario');
@@ -611,17 +604,15 @@ $result = $stmt->get_result();
     }
 
     function abrirAgregarHorarioModal(actividadId) {
-        // Guardar el ID de la actividad en el modal
+
         document.getElementById('actividadId').value = actividadId;
 
-        // Hacer una solicitud Ajax para obtener el horario_inicio y horario_cierre de la actividad
         fetch(`../SCRIPT/obtenerRangoHorario.php?id=${actividadId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     horarioInicio = data.horario_inicio;
                     horarioCierre = data.horario_cierre;
-                    // Actualizar el encabezado del modal con el rango de horarios
                     const encabezadoHorario = document.querySelector('#agregarHorarioModal .modal-body h4');
                     encabezadoHorario.textContent = `Horario debe estar entre ${horarioInicio} y ${horarioCierre}`;
                 } else {
@@ -635,9 +626,7 @@ $result = $stmt->get_result();
         const actividadId = document.getElementById('actividadId').value;
         const horario = document.getElementById('nuevoHorario').value;
 
-        // Verificar si el horario está en el rango permitido
         if (horario >= horarioInicio && horario <= horarioCierre) {
-            // Enviar el horario al servidor para guardarlo
             fetch('../SCRIPT/agregarHorario.php', {
                     method: 'POST',
                     headers: {
@@ -652,8 +641,8 @@ $result = $stmt->get_result();
                 .then(data => {
                     if (data.success) {
                         alert('Horario agregado correctamente');
-                        $('#agregarHorarioModal').modal('hide'); // Cerrar el modal
-                        location.reload(); // Recargar la página
+                        $('#agregarHorarioModal').modal('hide');
+                        location.reload();
                     } else {
                         alert(data.error || 'Error al agregar el horario');
                     }
@@ -665,16 +654,11 @@ $result = $stmt->get_result();
     }
 
     function cargarDatosActividad(button) {
-        // Obtener el ID de la actividad desde el atributo data-id del botón
         var id = button.getAttribute('data-id');
-
-        // Hacer una llamada AJAX para obtener los datos de la actividad
         fetch('../SCRIPT/obtener_actividad.php?id=' + id)
             .then(response => response.json())
             .then(data => {
-                // Verifica si hay datos de la actividad
                 if (data) {
-                    // Llenar los campos del modal con los datos recibidos
                     document.getElementById('editar_id').value = data.id;
                     document.getElementById('editar_nombre').value = data.nombre;
                     document.getElementById('editar_descripcion').value = data.descripcion;
@@ -685,25 +669,22 @@ $result = $stmt->get_result();
                     document.getElementById('editar_duracion').value = data.duracion;
                     document.getElementById('editar_dia_inicio').value = data.dia_inicio;
                     document.getElementById('editar_dia_fin').value = data.dia_fin;
-
-                    // Cargar y mostrar la imagen actual
                     const imagenActual = document.getElementById('editar_imagen_actual');
-                    imagenActual.src = data.imagen; // Suponiendo que 'data.imagen' contiene la URL de la imagen
-                    imagenActual.style.display = 'block'; // Mostrar la imagen
+                    imagenActual.src = data.imagen;
+                    imagenActual.style.display = 'block';
                 }
             })
             .catch(error => console.error('Error al cargar los datos de la actividad:', error));
     }
 
-    // Función para mostrar la vista previa de la nueva imagen
     function mostrarVistaPrevia(input) {
         const imagenPreview = document.getElementById('editar_imagen_actual');
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                imagenPreview.src = e.target.result; // Actualizar la vista previa con la nueva imagen
+                imagenPreview.src = e.target.result;
             }
-            reader.readAsDataURL(input.files[0]); // Leer el archivo como una URL de datos
+            reader.readAsDataURL(input.files[0]);
         }
     }
 </script>

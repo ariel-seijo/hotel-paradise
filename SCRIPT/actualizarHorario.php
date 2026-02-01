@@ -20,4 +20,3 @@ if ($horario_id && $horario) {
 }
 
 $conn->close();
-?>

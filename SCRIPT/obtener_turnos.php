@@ -1,17 +1,13 @@
 <?php
-// Incluir la conexión a la base de datos
 include 'conexion.php';
 session_start();
 
 $actividad_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $capacidad_turno = isset($_GET['capacidad_turno']) ? intval($_GET['capacidad_turno']) : 0;
 $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : '';
-
-// Verificar si el usuario es visualizador
 $isVisualizador = !isset($_SESSION['isAdmin']);
 
 if ($actividad_id > 0 && !empty($fecha)) {
-    // Obtener todos los horarios
     $sql = "SELECT id, horario FROM turnos_horarios WHERE actividad_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $actividad_id);
@@ -71,8 +67,6 @@ if ($actividad_id > 0 && !empty($fecha)) {
             echo '</button></h2>';
             echo '<div id="collapse' . $horarioId . '" class="accordion-collapse collapse" aria-labelledby="heading' . $horarioId . '" data-bs-parent="#horariosAccordion">';
             echo '<div class="accordion-body">';
-
-            // Generar filas de reservas
             echo '<table class="table">';
             echo '<thead><tr>';
             echo '<th style="width: 25%;">Número de Turno</th>';
@@ -85,8 +79,6 @@ if ($actividad_id > 0 && !empty($fecha)) {
             echo '<tbody>';
             for ($i = 1; $i <= $capacidad_turno; $i++) {
                 $turnoIdUnico = $horarioId . '-' . $i;
-
-                // Comprobar si ya existe una reserva para este turno y fecha
                 $sqlReserva = "SELECT r.huesped_dni, h.huesped_nombre 
                                FROM reservas r
                                LEFT JOIN huespedes h ON r.huesped_dni = h.huesped_dni 
@@ -112,10 +104,8 @@ if ($actividad_id > 0 && !empty($fecha)) {
 
                 if (!$isVisualizador) {
                     if ($huespedDNI !== '-----') {
-                        // Si hay una reserva, mostrar el botón de cancelar
                         echo '<td style="width: 20%;"><button class="btn btn-danger btn-sm btn-cancelar" onclick="cancelarReserva(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Cancelar Reserva</button></td>';
                     } else {
-                        // Si no hay reserva, mostrar el botón de reservar
                         echo '<td style="width: 20%;"><button class="btn btn-primary btn-sm" onclick="reservarTurno(\'' . htmlspecialchars($turnoIdUnico) . '\', \'' . htmlspecialchars($horario) . '\')">Reservar</button></td>';
                     }
                 }

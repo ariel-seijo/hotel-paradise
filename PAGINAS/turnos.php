@@ -1,12 +1,11 @@
 <?php
-// Incluir archivo de conexión a la base de datos
+
 include '../SCRIPT/conexion.php';
 
-// Verificar que se haya recibido la ID de la actividad
-if (isset($_GET['id'])) {
-    $actividadId = intval($_GET['id']); // Convertir a entero para evitar inyección SQL
 
-    // Consulta para obtener la información de la actividad
+if (isset($_GET['id'])) {
+    $actividadId = intval($_GET['id']);
+
     $query = "SELECT nombre, descripcion, horario_inicio, horario_cierre, dia_inicio, dia_fin, formato, capacidad_turno, duracion, imagen 
               FROM actividades 
               WHERE id = ?";
@@ -15,7 +14,6 @@ if (isset($_GET['id'])) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Verificar si se encontró la actividad
     if ($result->num_rows > 0) {
         $actividad = $result->fetch_assoc();
     } else {
@@ -35,7 +33,7 @@ if (isset($_GET['id'])) {
     <link rel="icon" href="../IMAGENES/paradise-icono.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $actividad['nombre']?> | Turnos</title>
+    <title><?php echo $actividad['nombre'] ?> | Turnos</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <?php include 'navbar.php'; ?>
@@ -179,7 +177,6 @@ if (isset($_GET['id'])) {
             background-color: rgb(179, 238, 237);
         }
 
-        /* Responsividad */
         @media (max-width: 768px) {
 
             .seccion-panel,
@@ -258,7 +255,7 @@ if (isset($_GET['id'])) {
                     </div>
                     <style>
                         .volver {
-                            display:flex;
+                            display: flex;
                             align-items: center;
                             justify-content: end;
                         }
@@ -267,15 +264,14 @@ if (isset($_GET['id'])) {
                             width: 33%;
                         }
                     </style>
-                </row>
-                <?php include '../SCRIPT/generar_turnos.php' ?>
+                    </row>
+                    <?php include '../SCRIPT/generar_turnos.php' ?>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Scripts de Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>

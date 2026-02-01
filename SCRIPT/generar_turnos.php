@@ -36,7 +36,7 @@ if ($actividad_id > 0) {
 </div>
 
 
-<!-- Modal para Reservar -->
+
 <div class="modal fade" id="reservarModal" tabindex="-1" aria-labelledby="reservarModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -103,16 +103,16 @@ if ($actividad_id > 0) {
 
 <script>
     document.getElementById('reservarForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Evita el envío normal del formulario
+        e.preventDefault();
 
         const turnoId = document.getElementById('turnoId').value;
         const dniHuesped = document.getElementById('dniHuesped').value;
         const actividadId = '<?php echo $actividad_id; ?>';
         const horario = document.getElementById('horarioActividad').value;
         const fecha = document.getElementById('fechaActividad').value;
-        const correoHuesped = document.getElementById('correoHuesped').value; // Nuevo campo de correo electrónico
+        const correoHuesped = document.getElementById('correoHuesped').value;
 
-        console.log(turnoId, dniHuesped, actividadId, horario, fecha, correoHuesped); // Muestra los valores en consola
+        console.log(turnoId, dniHuesped, actividadId, horario, fecha, correoHuesped);
 
         fetch('../SCRIPT/guardar_reserva.php', {
                 method: 'POST',
@@ -125,7 +125,7 @@ if ($actividad_id > 0) {
                     actividad_id: actividadId,
                     horario: horario,
                     fecha: fecha,
-                    correo: correoHuesped // Enviar el correo electrónico
+                    correo: correoHuesped
                 })
             })
             .then(response => response.json())
@@ -156,7 +156,7 @@ if ($actividad_id > 0) {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'found') {
-                        // Si el huésped es encontrado, autocompleta los campos
+
                         document.getElementById('nombreHuesped').value = data.nombre;
                         document.getElementById('correoHuesped').value = data.email;
                     } else if (data.status === 'not_found') {
@@ -170,13 +170,13 @@ if ($actividad_id > 0) {
     });
 
     function reservarTurno(turnoId, horario) {
-        // Asigna los valores a los campos del formulario en el modal
+
         document.getElementById('turnoId').value = turnoId;
         document.getElementById('horarioActividad').value = horario;
         document.getElementById('nombreActividad').value = '<?php echo $actividad['nombre'] ?>';
         document.getElementById('fechaActividad').value = document.getElementById('fecha').value;
 
-        // Abre el modal de reserva
+
         const reservarModal = new bootstrap.Modal(document.getElementById('reservarModal'));
         reservarModal.show();
     }
@@ -185,17 +185,17 @@ if ($actividad_id > 0) {
         e.preventDefault();
 
         const fechaSeleccionada = document.getElementById('fecha').value;
-        const fechaActual = new Date().toISOString().split("T")[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
+        const fechaActual = new Date().toISOString().split("T")[0];
 
-        // Comprobar si la fecha seleccionada es anterior o igual a la fecha actual
+
         if (fechaSeleccionada < fechaActual) {
             document.getElementById('result').innerHTML = '<div class="alert alert-danger">No se puede reservar turnos en días anteriores a la fecha.</div>';
             document.getElementById("btn-pdf").style.display = "none";
             document.getElementById("btn-excel").style.display = "none";
-            return; // Detiene el proceso si la fecha no es válida
+            return;
         }
 
-        // Continúa con el resto de las validaciones de días de la semana
+
         const fecha = new Date(fechaSeleccionada + "T00:00:00Z");
         const dia = fecha.getUTCDay();
         const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
@@ -213,17 +213,17 @@ if ($actividad_id > 0) {
 
         const resultDiv = document.getElementById('result');
         if (esDiaValido) {
-            // Hacer una solicitud AJAX a PHP para obtener los horarios de la actividad
+
             fetch(`../SCRIPT/obtener_turnos.php?id=<?php echo $actividad_id; ?>&capacidad_turno=<?php echo $capacidad_turno; ?>&fecha=${fechaSeleccionada}`)
                 .then(response => response.text())
                 .then(data => {
                     resultDiv.innerHTML = data;
                     document.getElementById("btn-pdf").style.display = "inline";
-                    document.getElementById("btn-excel").style.display = "inline"; // Agregar la lista de horarios al resultado
+                    document.getElementById("btn-excel").style.display = "inline";
                 })
                 .catch(error => console.error('Error al obtener los turnos:', error));
-                document.getElementById("btn-pdf").style.display = "none";
-                document.getElementById("btn-excel").style.display = "none";
+            document.getElementById("btn-pdf").style.display = "none";
+            document.getElementById("btn-excel").style.display = "none";
         } else {
             resultDiv.innerHTML = '<div class="alert alert-danger">La actividad no tiene turnos asignados para estos días.</div>';
             document.getElementById("btn-pdf").style.display = "none";
@@ -234,7 +234,7 @@ if ($actividad_id > 0) {
 
 
     function cancelarReserva(turnoId, horario) {
-        // Aquí puedes implementar la lógica para cancelar la reserva
+
         if (confirm("¿Está seguro de que desea cancelar esta reserva?")) {
             fetch('../SCRIPT/cancelar_reserva.php', {
                     method: 'POST',
@@ -249,8 +249,8 @@ if ($actividad_id > 0) {
                 .then(data => {
                     if (data.status === 'success') {
                         alert('Reserva cancelada con éxito.');
-                        // Actualiza la UI o recarga los horarios
-                        location.reload(); // O puedes actualizar solo la parte afectada
+
+                        location.reload();
                     } else {
                         alert('Error al cancelar la reserva: ' + data.message);
                     }

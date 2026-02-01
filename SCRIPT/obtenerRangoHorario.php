@@ -1,11 +1,9 @@
 <?php
-// Conexión a la base de datos
 require_once 'conexion.php';
 
 $id = $_GET['id'] ?? null;
 
 if ($id) {
-    // Consulta para obtener el rango de horarios de la actividad
     $sql = "SELECT horario_inicio, horario_cierre FROM actividades WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
@@ -25,4 +23,3 @@ if ($id) {
 };
 
 $conn->close();
-?>

@@ -1,18 +1,15 @@
 <?php
-// Incluir la conexión a la base de datos
 require_once 'conexion.php';
-require_once '../vendor/autoload.php'; // Cargar la librería PhpSpreadsheet
+require_once '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-// Recuperar los filtros desde la URL
 $filtroFecha = isset($_GET['fecha']) ? $_GET['fecha'] : '';
 $filtroNombreHuesped = isset($_GET['nombre_huesped']) ? $_GET['nombre_huesped'] : '';
 $filtroDNI = isset($_GET['dni']) ? $_GET['dni'] : '';
 $filtroActividad = isset($_GET['nombre_actividad']) ? $_GET['nombre_actividad'] : '';
 
-// Construir la consulta con filtros
 $sql = "SELECT 
             reservas.id, 
             reservas.huesped_dni, 
@@ -27,7 +24,6 @@ $sql = "SELECT
         JOIN actividades ON reservas.actividad_id = actividades.id 
         WHERE 1";
 
-// Aplicar filtros si están presentes
 if (!empty($filtroFecha)) {
     $sql .= " AND reservas.fecha = ?";
 }
@@ -41,10 +37,8 @@ if (!empty($filtroActividad)) {
     $sql .= " AND actividades.nombre LIKE ?";
 }
 
-// Preparar la consulta
 $stmt = $conn->prepare($sql);
 
-// Vincular parámetros según los filtros
 $params = [];
 if (!empty($filtroFecha)) {
     $params[] = $filtroFecha;
@@ -59,7 +53,6 @@ if (!empty($filtroActividad)) {
     $params[] = '%' . $filtroActividad . '%';
 }
 
-// Vincular parámetros solo si hay filtros aplicados
 if (!empty($params)) {
     $stmt->bind_param(str_repeat("s", count($params)), ...$params);
 }
@@ -67,11 +60,9 @@ if (!empty($params)) {
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Crear una nueva hoja de cálculo
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
-// Títulos de las columnas
 $sheet->setCellValue('A1', 'ID');
 $sheet->setCellValue('B1', 'DNI');
 $sheet->setCellValue('C1', 'Nombre del Huésped');
@@ -80,7 +71,6 @@ $sheet->setCellValue('E1', 'Nombre de la Actividad');
 $sheet->setCellValue('F1', 'Horario');
 $sheet->setCellValue('G1', 'Fecha del Turno');
 
-// Escribir los registros en las filas
 $rowNum = 2;
 while ($row = $result->fetch_assoc()) {
     $sheet->setCellValue('A' . $rowNum, $row['id']);
@@ -93,10 +83,8 @@ while ($row = $result->fetch_assoc()) {
     $rowNum++;
 }
 
-// Definir nombre del archivo Excel
-$nombreArchivo = 'registros_turnos';  // Cambié el nombre a 'agenda_turnos'
+$nombreArchivo = 'registros_turnos';
 
-// Agregar filtros al nombre del archivo
 if (!empty($filtroFecha)) {
     $nombreArchivo .= '_fecha_' . $filtroFecha;
 }
@@ -110,18 +98,14 @@ if (!empty($filtroActividad)) {
     $nombreArchivo .= '_actividad_' . urlencode($filtroActividad);
 }
 
-// Establecer la cabecera para la descarga del archivo
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment; filename="' . $nombreArchivo . '.xlsx"');
 header('Cache-Control: max-age=0');
 header('Expires: 0');
 
-// Limpiar el buffer y forzar la salida del archivo
 ob_clean();
 flush();
 
-// Crear el archivo Excel y enviarlo al navegador
 $writer = new Xlsx($spreadsheet);
 $writer->save('php://output');
 exit;
-?>

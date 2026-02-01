@@ -1,18 +1,14 @@
 <?php
-// Incluir la conexión a la base de datos
+
 include 'conexion.php';
 
-// Incluir la librería mPDF
 require_once('../vendor/autoload.php');
 
-// Inicializar variables de filtro
 $filtroFecha = isset($_GET['fecha']) ? $_GET['fecha'] : '';
 $filtroNombreHuesped = isset($_GET['nombre_huesped']) ? $_GET['nombre_huesped'] : '';
 $filtroDNI = isset($_GET['dni']) ? $_GET['dni'] : '';
 $filtroActividad = isset($_GET['nombre_actividad']) ? $_GET['nombre_actividad'] : '';
 
-// Construir la consulta con filtros
-// Construir la consulta con filtros
 $sql = "SELECT 
             reservas.id, 
             reservas.huesped_dni, 
@@ -27,7 +23,7 @@ $sql = "SELECT
         JOIN actividades ON reservas.actividad_id = actividades.id 
         WHERE 1";
 
-// Aplicar filtros si están presentes
+
 if (!empty($filtroFecha)) {
     $sql .= " AND reservas.fecha = ?";
 }
@@ -41,13 +37,12 @@ if (!empty($filtroActividad)) {
     $sql .= " AND actividades.nombre LIKE ?";
 }
 
-// Agregar orden por fecha descendente
+
 $sql .= " ORDER BY reservas.fecha DESC";
 
-// Preparar la consulta
+
 $stmt = $conn->prepare($sql);
 
-// Vincular parámetros según los filtros
 $params = [];
 if (!empty($filtroFecha)) {
     $params[] = $filtroFecha;
@@ -62,7 +57,6 @@ if (!empty($filtroActividad)) {
     $params[] = '%' . $filtroActividad . '%';
 }
 
-// Vincular parámetros solo si hay filtros aplicados
 if (!empty($params)) {
     $stmt->bind_param(str_repeat("s", count($params)), ...$params);
 }
@@ -73,7 +67,6 @@ $result = $stmt->get_result();
 ?>
 
 <div class="container mt-5">
-    <!-- Formulario de búsqueda -->
     <form method="GET" action="administrador-registros.php">
         <div class="row mb-3" class="mt-2 mb-2">
             <div class="col-md-2">
@@ -101,45 +94,34 @@ $result = $stmt->get_result();
             </style>
         </div>
     </form>
-
-    <!-- Botón para descargar el PDF -->
     <button type="button" class="btn btn-danger mb-3" onclick="downloadPDF()">
-    <i class="bi bi-filetype-pdf"></i>
-    Exportar PDF</button>
+        <i class="bi bi-filetype-pdf"></i>
+        Exportar PDF</button>
 
     <script>
         function downloadPDF() {
-            // Construir la URL con los parámetros de los filtros
             var url = "../SCRIPT/generar_pdf_registros.php?";
             url += "fecha=" + encodeURIComponent("<?php echo htmlspecialchars($filtroFecha); ?>");
             url += "&nombre_huesped=" + encodeURIComponent("<?php echo htmlspecialchars($filtroNombreHuesped); ?>");
             url += "&dni=" + encodeURIComponent("<?php echo htmlspecialchars($filtroDNI); ?>");
             url += "&nombre_actividad=" + encodeURIComponent("<?php echo htmlspecialchars($filtroActividad); ?>");
-
-            // Redirigir a la URL generada
             window.location.href = url;
         }
     </script>
 
     <button type="button" class="btn btn-success mb-3" onclick="downloadExcel()">
-    <i class="bi bi-file-earmark-excel"></i> Exportar Excel</button>
+        <i class="bi bi-file-earmark-excel"></i> Exportar Excel</button>
 
     <script>
         function downloadExcel() {
-            // Construir la URL con los parámetros de los filtros
             var url = "../SCRIPT/generar_excel_registros.php?";
             url += "fecha=" + encodeURIComponent("<?php echo htmlspecialchars($filtroFecha); ?>");
             url += "&nombre_huesped=" + encodeURIComponent("<?php echo htmlspecialchars($filtroNombreHuesped); ?>");
             url += "&dni=" + encodeURIComponent("<?php echo htmlspecialchars($filtroDNI); ?>");
             url += "&nombre_actividad=" + encodeURIComponent("<?php echo htmlspecialchars($filtroActividad); ?>");
-
-            // Redirigir a la URL generada
             window.location.href = url;
         }
     </script>
-
-
-    <!-- Contenedor para hacer la tabla scrolleable -->
     <div class="table-responsive" style="max-height: 550px; overflow-y: auto;">
         <table class="table">
             <thead>

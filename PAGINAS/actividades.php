@@ -20,22 +20,18 @@
         </div>
     </div>
 
-
     <style>
         .card {
             border: none;
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
-            /* Sombra para dar profundidad */
             overflow: hidden;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .card:hover {
             transform: scale(1.02);
-            /* Efecto de escala al hacer hover */
             box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-            /* Sombra más intensa en hover */
         }
 
         .card-img-top {
@@ -47,7 +43,6 @@
 
         .card-body {
             background-color: #3e99c6;
-            /* Color secundario */
             padding: 20px;
             text-align: center;
             border-bottom-left-radius: 10px;
@@ -64,7 +59,6 @@
 
         .card:hover .card-title {
             color: #ffb5ba;
-            /* Color en hover para el título */
         }
 
         .card a {
@@ -76,30 +70,19 @@
             color: white;
         }
 
-
-
-
         .contenedor-principal {
-
             background-color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-
         }
 
-
-        body, .container {
+        body,
+        .container {
             background-color: white;
         }
     </style>
-
-
-
-
-
-
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

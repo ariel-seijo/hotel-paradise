@@ -1,7 +1,6 @@
 <?php
 include '../SCRIPT/conexion.php';
 
-// Buscar usuarios según el criterio
 $searchQuery = "";
 if (isset($_GET['search'])) {
     $searchQuery = $_GET['search'];
@@ -41,7 +40,6 @@ $result = $stmt->get_result();
             justify-content: space-between;
         }
 
-        /* Asegurar el mismo ancho en cada columna */
         .w-25 {
             width: 25%;
         }
@@ -68,8 +66,8 @@ $result = $stmt->get_result();
                 <?php if (isset($_SESSION['mensaje'])): ?>
                     <div class="alert alert-success" role="alert">
                         <?php
-                        echo $_SESSION['mensaje']; // Mostrar el mensaje
-                        unset($_SESSION['mensaje']); // Eliminar el mensaje de la sesión
+                        echo $_SESSION['mensaje'];
+                        unset($_SESSION['mensaje']);
                         ?>
                     </div>
                 <?php endif; ?>
@@ -122,19 +120,15 @@ $result = $stmt->get_result();
                 <style>
                     .custom-border {
                         border: 2px solid #34a09e;
-                        /* Borde exterior */
                         border-collapse: collapse;
-                        /* Colapsa el borde */
                     }
 
                     .custom-border th,
                     .custom-border td {
                         border: none;
-                        /* Sin borde en las celdas */
                     }
                 </style>
             </div>
-            <!-- Modal para añadir usuario -->
             <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -177,7 +171,6 @@ $result = $stmt->get_result();
         </div>
     </div>
     <style>
-        /* Estilos de los botones */
         .btn-primary {
             color: black;
             background-color: #62bfbd;
@@ -256,12 +249,9 @@ $result = $stmt->get_result();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Mostrar botón Cambiar Permiso al cambiar el tipo de usuario
             $('.user-type').on('change', function() {
                 $(this).closest('td').siblings().find('.update-btn').show();
             });
-
-            // Cambiar Permiso en la BD
             $('.update-btn').on('click', function() {
                 var userId = $(this).data('id');
                 var newType = $(this).closest('tr').find('.user-type').val();
@@ -273,8 +263,6 @@ $result = $stmt->get_result();
                     location.reload();
                 });
             });
-
-            // Eliminar Usuario
             $('.delete-btn').on('click', function() {
                 if (confirm('¿Estás seguro de eliminar este usuario?')) {
                     var userId = $(this).data('id');

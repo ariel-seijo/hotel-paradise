@@ -19,4 +19,3 @@ if ($actividad_id) {
 }
 
 $conn->close();
-?>

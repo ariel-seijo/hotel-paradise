@@ -7,4 +7,3 @@ if (isset($_POST['id'])) {
     $stmt->bind_param("i", $userId);
     $stmt->execute();
 }
-?>

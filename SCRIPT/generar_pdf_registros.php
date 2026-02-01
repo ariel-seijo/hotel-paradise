@@ -1,26 +1,17 @@
 <?php
-// Incluir la conexión a la base de datos y la librería mPDF
 include 'conexion.php';
 require_once('../vendor/autoload.php');
 
-// Obtener los filtros aplicados desde la URL
-// Recuperar los filtros desde la URL
 $filtroFecha = isset($_GET['fecha']) ? $_GET['fecha'] : '';
 $filtroNombreHuesped = isset($_GET['nombre_huesped']) ? $_GET['nombre_huesped'] : '';
 $filtroDNI = isset($_GET['dni']) ? $_GET['dni'] : '';
 $filtroActividad = isset($_GET['nombre_actividad']) ? $_GET['nombre_actividad'] : '';
 
-// Continuar con la lógica para generar el PDF usando los filtros
-
-
-// Inicializar mPDF
 $mpdf = new \Mpdf\Mpdf();
 
-// Crear un título personalizado basado en los filtros
 $tituloPDF = 'Registros de Turnos';
 $nombreArchivo = 'registros_turnos';
 
-// Aplicar filtros al título y al nombre del archivo
 if (!empty($filtroFecha)) {
     $tituloPDF .= ' - Fecha: ' . $filtroFecha;
     $nombreArchivo .= '_fecha_' . $filtroFecha;
@@ -38,10 +29,8 @@ if (!empty($filtroActividad)) {
     $nombreArchivo .= '_actividad_' . preg_replace('/[^a-zA-Z0-9]/', '_', $filtroActividad); // Reemplazar caracteres especiales en el nombre
 }
 
-// Establecer el título del documento
 $mpdf->SetTitle($tituloPDF);
 
-// Definir el contenido HTML
 $html = '
 <html>
 <head>
@@ -75,7 +64,6 @@ $html = '
         </thead>
         <tbody>';
 
-// Construir la consulta con filtros aplicados
 $sql = "SELECT 
             reservas.id, 
             reservas.huesped_dni, 
@@ -90,7 +78,6 @@ $sql = "SELECT
         JOIN actividades ON reservas.actividad_id = actividades.id
         WHERE 1";
 
-// Aplicar filtros si están presentes
 if (!empty($filtroFecha)) {
     $sql .= " AND reservas.fecha = ?";
 }
@@ -104,10 +91,8 @@ if (!empty($filtroActividad)) {
     $sql .= " AND actividades.nombre LIKE ?";
 }
 
-// Preparar la consulta
 $stmt = $conn->prepare($sql);
 
-// Vincular parámetros según los filtros
 $params = [];
 if (!empty($filtroFecha)) {
     $params[] = $filtroFecha;
@@ -122,7 +107,6 @@ if (!empty($filtroActividad)) {
     $params[] = '%' . $filtroActividad . '%';
 }
 
-// Vincular parámetros solo si hay filtros aplicados
 if (!empty($params)) {
     $stmt->bind_param(str_repeat("s", count($params)), ...$params);
 }
@@ -130,7 +114,6 @@ if (!empty($params)) {
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Agregar los datos de los registros al HTML del PDF
 while ($row = $result->fetch_assoc()) {
     $html .= '<tr>
                 <td>' . htmlspecialchars($row['id']) . '</td>
@@ -143,11 +126,8 @@ while ($row = $result->fetch_assoc()) {
               </tr>';
 }
 
-// Cerrar la tabla
 $html .= '</tbody></table></body></html>';
 
-// Escribir el contenido HTML en el PDF
 $mpdf->WriteHTML($html);
 
-// Descargar el PDF con el nombre basado en los filtros
 $mpdf->Output($nombreArchivo . '.pdf', 'D');

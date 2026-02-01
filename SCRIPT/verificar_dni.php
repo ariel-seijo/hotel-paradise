@@ -26,4 +26,3 @@ if (!empty($dni)) {
 
 $stmt->close();
 $conn->close();
-?>

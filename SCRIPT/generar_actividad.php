@@ -1,8 +1,5 @@
 <?php
-// Incluir archivo de conexión a la base de datos
 include 'conexion.php';
-
-// Consulta para obtener todas las actividades
 $query = "SELECT * FROM actividades";
 $result = $conn->query($query);
 ?>

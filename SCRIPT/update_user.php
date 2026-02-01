@@ -9,4 +9,3 @@ if (isset($_POST['id']) && isset($_POST['isAdmin'])) {
     $stmt->bind_param("ii", $isAdmin, $userId);
     $stmt->execute();
 }
-?>

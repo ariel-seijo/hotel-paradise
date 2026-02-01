@@ -1,13 +1,14 @@
 <?php
 require '../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-function enviarCorreoConfirmacion($correo, $huespedNombre, $nombreActividad, $horario, $fecha) {
+function enviarCorreoConfirmacion($correo, $huespedNombre, $nombreActividad, $horario, $fecha)
+{
     $mail = new PHPMailer(true);
 
     try {
-        // Configuración del servidor SMTP
         $env = parse_ini_file(__DIR__ . '/../.env');
         $mail->isSMTP();
         $mail->Host = $env['SMTP_HOST'];
@@ -16,13 +17,8 @@ function enviarCorreoConfirmacion($correo, $huespedNombre, $nombreActividad, $ho
         $mail->Password = $env['SMTP_PASS'];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = $env['SMTP_PORT'];
-        
-
-        // Configuración del remitente y destinatario
         $mail->setFrom($env['SMTP_USER'], 'Hotel Paradise');
         $mail->addAddress($correo);
-
-        // Contenido del correo
         $mail->isHTML(true);
         $mail->Subject = 'Reserva realizada exitosamente';
         $mail->Body = "
@@ -35,8 +31,6 @@ function enviarCorreoConfirmacion($correo, $huespedNombre, $nombreActividad, $ho
             </ul>
             <p>Gracias por confiar en nosotros.</p>
         ";
-
-        // Envía el correo
         $mail->send();
         return true;
     } catch (Exception $e) {
@@ -44,5 +38,3 @@ function enviarCorreoConfirmacion($correo, $huespedNombre, $nombreActividad, $ho
         return false;
     }
 }
-?>
-

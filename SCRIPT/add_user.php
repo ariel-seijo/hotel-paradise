@@ -12,13 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ssi", $email, $password, $isAdmin);
     if ($stmt->execute()) {
-        $_SESSION['mensaje'] = "Usuario agregado con éxito."; // Mensaje de éxito
+        $_SESSION['mensaje'] = "Usuario agregado con éxito.";
         header("Location: ../PAGINAS/administrador-usuarios.php");
-        exit(); // Asegurarse de que no se ejecute más código
+        exit();
     } else {
-        $_SESSION['mensaje'] = "Error al agregar el usuario: " . $stmt->error; // Mensaje de error
+        $_SESSION['mensaje'] = "Error al agregar el usuario: " . $stmt->error;
         header("Location: ../PAGINAS/administrador-usuarios.php");
-        exit(); // Asegurarse de que no se ejecute más código
+        exit();
     }
 }
-?>

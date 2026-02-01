@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
 include 'SCRIPT\login.php';
 
 $error = isset($_SESSION['error']) ? $_SESSION['error'] : "";
-unset($_SESSION['error']); // Limpiar la variable de sesión
+unset($_SESSION['error']);
 
 if (!empty($error)) {
   echo '<div class="alert alert-danger">' . htmlspecialchars($error) . '</div>';
@@ -33,7 +33,7 @@ if (!empty($error)) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="modal-body">
-          <!-- Formulario de Login -->
+
           <form action="SCRIPT/login.php" method="POST" id="loginForm">
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">Correo electrónico</label>
@@ -47,7 +47,7 @@ if (!empty($error)) {
             <p class="text-center mt-2"><a href="#" id="forgotPasswordLink">Olvidé mi contraseña</a></p>
           </form>
 
-          <!-- Formulario de Restablecimiento de Contraseña -->
+
           <form id="resetForm" style="display: none;">
             <div class="mb-3">
               <label for="resetEmail" class="form-label">Correo electrónico</label>
@@ -57,7 +57,7 @@ if (!empty($error)) {
             <button type="button" class="btn btn-secondary" id="backToLogin">Volver</button>
           </form>
 
-          <!-- Formulario de Verificación de Código -->
+
           <form id="verifyCodeForm" style="display: none;">
             <div class="mb-3">
               <h5>Ingresa el código que te enviamos por mail</h5>
@@ -67,7 +67,7 @@ if (!empty($error)) {
             <button type="button" class="btn btn-primary" id="verifyTokenBtn">Verificar</button>
           </form>
 
-          <!-- Formulario de Cambio de Contraseña -->
+
           <form id="changePasswordForm" style="display: none;">
             <div class="mb-3">
               <label for="newPassword" class="form-label">Nueva contraseña</label>
@@ -95,7 +95,6 @@ if (!empty($error)) {
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Cambiar entre formularios
     document.getElementById('forgotPasswordLink').addEventListener('click', function() {
       document.getElementById('loginForm').style.display = 'none';
       document.getElementById('resetForm').style.display = 'block';
@@ -204,11 +203,9 @@ if (!empty($error)) {
   .alert-danger {
     background-color: #ffb5ba;
     color: #8b0000;
-    /* Texto rojo oscuro para mejor contraste */
+
     border: none;
   }
-
-  /* Botón de Salir */
 
   .btn {
     background-color: #3aa4d9;
@@ -236,7 +233,7 @@ if (!empty($error)) {
 
   .modal-header {
     background-color: #4bbbf2;
-    /* Color principal del encabezado modal */
+
     color: white;
   }
 
@@ -246,7 +243,7 @@ if (!empty($error)) {
 
   .modal-footer {
     background-color: #4bbaf286;
-    /* Fondo claro para el pie del modal */
+
   }
 
   .modal-body {
@@ -255,14 +252,14 @@ if (!empty($error)) {
 
   .form-control {
     border: 1px solid #62bfbd;
-    /* Bordes de los campos de entrada */
+
     border-radius: 4px;
     transition: box-shadow 0.2s ease;
   }
 
   .form-control:focus {
     box-shadow: 0px 0px 8px rgba(98, 191, 189, 0.5);
-    /* Efecto de enfoque */
+
   }
 </style>
 

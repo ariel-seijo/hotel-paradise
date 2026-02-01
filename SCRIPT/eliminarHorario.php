@@ -18,4 +18,3 @@ if ($horario_id) {
 }
 
 $conn->close();
-?>

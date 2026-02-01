@@ -1,35 +1,23 @@
 <?php
-// eliminar_actividad.php
 
 include 'conexion.php';
-session_start(); // Iniciar la sesión
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtiene el ID de la actividad a eliminar
-    $id = (int)$_POST['id']; // Asegúrate de convertir a entero
-
-    // Prepara la consulta de eliminación
+    $id = (int)$_POST['id'];
     $sql = "DELETE FROM actividades WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    
-    // Vincula el parámetro
     $stmt->bind_param("i", $id);
-
-    // Ejecuta la consulta
     if ($stmt->execute()) {
-        $_SESSION['mensaje'] = "Actividad eliminada con éxito."; // Mensaje de éxito
+        $_SESSION['mensaje'] = "Actividad eliminada con éxito.";
         header("Location: ../PAGINAS/administrador-actividades.php");
-        exit(); // Asegurarse de que no se ejecute más código
+        exit();
     } else {
-        $_SESSION['mensaje'] = "Error al eliminar la actividad: " . $stmt->error; // Mensaje de error
+        $_SESSION['mensaje'] = "Error al eliminar la actividad: " . $stmt->error;
         header("Location: ../PAGINAS/administrador-actividades.php");
-        exit(); // Asegurarse de que no se ejecute más código
+        exit();
     }
-
-    // Cierra la conexión
     $stmt->close();
 }
 
 $conn->close();
-?>
-
