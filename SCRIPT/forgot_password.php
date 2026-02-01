@@ -36,18 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail = new PHPMailer(true);
         
         try {
-            // Configuración del servidor SMTP
+        // Configuración del servidor SMTP
+            $env = parse_ini_file(__DIR__ . '/../.env');
             $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
+            $mail->Host = $env['SMTP_HOST'];
             $mail->SMTPAuth = true;
-            $mail->Username = 'tas.consultora@gmail.com'; // Tu correo
-            $mail->Password = 'drtg ebyv rmet avku'; // Tu contraseña de la app
+            $mail->Username = $env['SMTP_USER'];
+            $mail->Password = $env['SMTP_PASS'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Port = $env['SMTP_PORT'];
+            
 
             // Configuración del remitente y destinatario
-            $mail->setFrom('tas.consultora@gmail.com', 'Hotel Paradise');
-            $mail->addAddress($email); // Correo del destinatario
+            $mail->setFrom($env['SMTP_USER'], 'Hotel Paradise');
+            $mail->addAddress($email);
 
             // Contenido del correo
             $mail->isHTML(true);
